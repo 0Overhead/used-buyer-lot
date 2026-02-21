@@ -2120,20 +2120,24 @@
 
     <div class="form-card">
 
-      <!-- Seller Type -->
+      <!-- SELLER TYPE TOGGLE -->
       <div class="form-section">
-        <div class="form-section-title">👤 Seller Type</div>
-        <div class="form-group">
-          <label>Are you a licensed dealer or private seller?</label>
-          <div class="multi-select-group">
-            <span class="ms-option selected" onclick="toggleMS(this)">🏢 Licensed Dealer</span>
-            <span class="ms-option" onclick="toggleMS(this)">👤 Private Seller</span>
-          </div>
+        <div class="form-section-title">👤 Who Are You?</div>
+        <div class="seller-type-toggle">
+          <button class="stt-btn active" id="btnDealer" onclick="switchSellerType('dealer')">
+            🏢 Licensed Dealer
+          </button>
+          <button class="stt-btn" id="btnPrivate" onclick="switchSellerType('private')">
+            👤 Private Seller
+          </button>
+        </div>
+        <div id="sellerTypeHint" style="font-size:13px;color:var(--gray-400);margin-top:10px;">
+          Showing the dealer form — includes dealership info, financing, and warranty fields.
         </div>
       </div>
 
-      <!-- Dealer Info (shown for dealers) -->
-      <div class="form-section">
+      <!-- ═══ DEALER-ONLY SECTION ═══ -->
+      <div id="dealerSection" class="form-section">
         <div class="form-section-title">🏢 Dealership Info</div>
         <div class="form-row">
           <div class="form-group">
@@ -2152,24 +2156,121 @@
           </div>
           <div class="form-group">
             <label>Financing Available?</label>
-            <select><option>Yes</option><option>No</option></select>
+            <select>
+              <option>Yes — we offer financing</option>
+              <option>No — cash or buyer-arranged only</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>CPO / Warranty Offered?</label>
+            <select>
+              <option>No warranty</option>
+              <option>Certified Pre-Owned (CPO)</option>
+              <option>Dealer warranty included</option>
+              <option>Powertrain warranty only</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Trade-In Accepted?</label>
+            <select>
+              <option>Yes — we accept trade-ins</option>
+              <option>No</option>
+            </select>
           </div>
         </div>
       </div>
 
-      <!-- Vehicle Details -->
+      <!-- ═══ PRIVATE SELLER-ONLY SECTION ═══ -->
+      <div id="privateSection" class="form-section" style="display:none">
+        <div class="form-section-title">👤 About You</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Your First Name</label>
+            <input type="text" placeholder="e.g. Michael">
+          </div>
+          <div class="form-group">
+            <label>General Location</label>
+            <input type="text" placeholder="e.g. Temecula, CA">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Are You the Registered Owner?</label>
+            <select>
+              <option>Yes — I am the registered owner</option>
+              <option>No — selling on behalf of owner</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Is There a Lien on the Vehicle?</label>
+            <select>
+              <option>No lien — clear title</option>
+              <option>Yes — lien will be paid off at sale</option>
+              <option>Yes — buyer must assume lien</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Title Status</label>
+            <select>
+              <option>Clean title</option>
+              <option>Salvage title</option>
+              <option>Rebuilt / Reconstructed title</option>
+              <option>Lost title — can obtain duplicate</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Who Pays for Smog?</label>
+            <select>
+              <option>I will provide current smog cert</option>
+              <option>Buyer pays for smog</option>
+              <option>As-is — no smog provided</option>
+              <option>Vehicle is smog exempt</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Pre-Purchase Inspection Allowed?</label>
+            <select>
+              <option>Yes — buyer may inspect at their cost</option>
+              <option>No</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Reason for Selling</label>
+            <select>
+              <option>Upgrading to a newer vehicle</option>
+              <option>No longer need it</option>
+              <option>Relocating</option>
+              <option>Financial reasons</option>
+              <option>Prefer not to say</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ VEHICLE DETAILS (shared by both) ═══ -->
       <div class="form-section">
         <div class="form-section-title">🚗 Vehicle Details</div>
         <div class="form-row thirds">
           <div class="form-group">
             <label>Year</label>
-            <select><option>2021</option><option>2020</option><option>2019</option><option>2022</option><option>2023</option></select>
+            <select>
+              <option>2024</option><option>2023</option><option>2022</option>
+              <option selected>2021</option><option>2020</option><option>2019</option>
+              <option>2018</option><option>2017</option><option>2016</option>
+              <option>2015</option><option>2014</option><option>2013</option>
+            </select>
           </div>
           <div class="form-group">
             <label>Make</label>
             <select id="respMake" onchange="populateModels('respMake','respModel')">
               <option value="">Select make</option>
-              <option value="Acura">Acura</option>
+                            <option value="Acura">Acura</option>
               <option value="Alfa Romeo">Alfa Romeo</option>
               <option value="Audi">Audi</option>
               <option value="BMW">BMW</option>
@@ -2207,6 +2308,7 @@
               <option value="Vinfast">Vinfast</option>
               <option value="Volkswagen">Volkswagen</option>
               <option value="Volvo">Volvo</option>
+            
             </select>
           </div>
           <div class="form-group">
@@ -2223,125 +2325,168 @@
           </div>
           <div class="form-group">
             <label>Mileage</label>
-            <input type="text" placeholder="e.g. 38,200">
+            <input type="number" placeholder="e.g. 38200">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label>VIN</label>
-            <input type="text" placeholder="17-character VIN">
+            <input type="text" placeholder="17-character VIN" maxlength="17">
           </div>
           <div class="form-group">
             <label>Exterior Color</label>
-            <select><option>White</option><option>Black</option><option>Silver</option><option>Blue</option><option>Red</option></select>
+            <select>
+              <option>White</option><option>Black</option><option>Silver</option>
+              <option>Gray</option><option>Blue</option><option>Red</option>
+              <option>Green</option><option>Brown / Tan</option><option>Gold</option>
+              <option>Orange</option><option>Yellow</option><option>Purple</option><option>Other</option>
+            </select>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label>Accident History</label>
-            <select><option>No accidents</option><option>1 minor accident</option><option>1 major accident</option><option>Multiple accidents</option></select>
+            <select>
+              <option>No accidents</option>
+              <option>1 minor accident</option>
+              <option>1 major accident</option>
+              <option>Multiple accidents</option>
+            </select>
           </div>
           <div class="form-group">
             <label>Number of Previous Owners</label>
-            <select><option>1</option><option>2</option><option>3</option><option>4+</option></select>
+            <select>
+              <option>1 — I am the only owner</option>
+              <option>2</option><option>3</option><option>4+</option>
+            </select>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label>Service Records Available?</label>
-            <select><option>Yes — full history</option><option>Partial records</option><option>No records</option></select>
+            <select>
+              <option>Yes — full history</option>
+              <option>Partial records</option>
+              <option>No records</option>
+            </select>
           </div>
           <div class="form-group">
             <label>Smog Status</label>
-            <select><option>Current / Passed</option><option>Needs smog</option><option>Exempt</option></select>
+            <select>
+              <option>Current / Passed</option>
+              <option>Needs smog</option>
+              <option>Exempt</option>
+            </select>
           </div>
         </div>
         <div class="form-row single">
           <div class="form-group">
-            <label>Known Issues / Disclosures (required — enter "None" if none)</label>
-            <textarea placeholder="Disclose any known mechanical issues, cosmetic damage, or other material facts.">None known. Recent 30k service completed at Honda dealership.</textarea>
+            <label>Known Issues or Disclosures <span style="font-size:11px;color:var(--gray-400);font-weight:400;">— required by law. Enter "None" if none.</span></label>
+            <textarea placeholder="e.g. Minor paint scratch on rear bumper. AC works perfectly. No mechanical issues known.">None known.</textarea>
           </div>
         </div>
       </div>
 
-      <!-- OTD Price Breakdown -->
+      <!-- ═══ OTD PRICE BREAKDOWN (shared) ═══ -->
       <div class="form-section">
-        <div class="form-section-title">💵 Out-The-Door Price Breakdown (Required)</div>
-        <div class="alert alert-green">✅ This breakdown is shown directly to the buyer on their dashboard. All fields are required — no vague totals.</div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Vehicle Asking Price</label>
-            <input type="text" placeholder="$0.00" value="$17,500">
+        <div class="form-section-title">💰 Out-The-Door Price Breakdown</div>
+        <div style="font-size:13px;color:var(--gray-400);margin-bottom:16px;">Every line item is required. This is what makes Used Buyer Lot different — no hidden fees, ever.</div>
+
+        <!-- Dealer OTD fields -->
+        <div id="dealerOTD">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Vehicle Price</label>
+              <input type="number" placeholder="e.g. 17500" oninput="calcOTD()">
+            </div>
+            <div class="form-group">
+              <label>Doc Fee <span style="font-size:11px;color:var(--gray-400);">CA max $85</span></label>
+              <input type="number" placeholder="e.g. 85" oninput="calcOTD()">
+            </div>
           </div>
-          <div class="form-group">
-            <label>Doc Fee</label>
-            <input type="text" placeholder="$0.00" value="$85">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Smog Fee</label>
+              <input type="number" placeholder="e.g. 50" oninput="calcOTD()">
+            </div>
+            <div class="form-group">
+              <label>Sales Tax (est.)</label>
+              <input type="number" placeholder="e.g. 1500" oninput="calcOTD()">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>DMV / Registration Fee</label>
+              <input type="number" placeholder="e.g. 280" oninput="calcOTD()">
+            </div>
+            <div class="form-group">
+              <label>Any Other Fees</label>
+              <input type="number" placeholder="e.g. 0" oninput="calcOTD()">
+            </div>
           </div>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Smog Fee</label>
-            <input type="text" placeholder="$0.00" value="$50">
+
+        <!-- Private Seller OTD fields (simpler) -->
+        <div id="privateOTD" style="display:none">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Asking Price</label>
+              <input type="number" placeholder="e.g. 15000" oninput="calcOTD()">
+            </div>
+            <div class="form-group">
+              <label>Smog (if you are providing it)</label>
+              <input type="number" placeholder="e.g. 50 or 0" oninput="calcOTD()">
+            </div>
           </div>
-          <div class="form-group">
-            <label>Sales Tax (estimated)</label>
-            <input type="text" placeholder="$0.00" value="$1,356">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>DMV / Registration</label>
-            <input type="text" placeholder="$0.00" value="$459">
-          </div>
-          <div class="form-group">
-            <label>Any Additional Add-Ons</label>
-            <input type="text" placeholder="$0 if none" value="$0">
+          <div style="font-size:12px;color:var(--gray-400);margin-bottom:12px;padding:8px 12px;background:var(--gray-50);border-radius:var(--radius-sm);">
+            💡 Private sales do not include doc fees, dealer add-ons, or dealer financing. Sales tax and DMV transfer fees are the buyer's responsibility and are not included in your OTD price.
           </div>
         </div>
-        <div style="background:var(--green-light);border:1px solid #BBF7D0;border-radius:var(--radius-sm);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
-          <span style="font-weight:600;color:var(--green);font-size:15px;">Total Out-The-Door Price</span>
-          <span style="font-size:22px;font-weight:700;color:var(--green);font-family:'Playfair Display',serif;">$19,450</span>
+
+        <!-- OTD Total -->
+        <div class="otd-total-row">
+          <div class="otd-total-label">Total Out-The-Door Price</div>
+          <div class="otd-total-val" id="respOTDTotal">$0</div>
         </div>
       </div>
 
-      <!-- Pitch -->
+      <!-- ═══ PHOTOS (shared) ═══ -->
       <div class="form-section">
-        <div class="form-section-title">💬 Your Pitch</div>
+        <div class="form-section-title">📸 Photos</div>
+        <div style="font-size:13px;color:var(--gray-400);margin-bottom:16px;">
+          Minimum 8 photos required. More photos = more serious buyers.
+        </div>
+        <div class="photo-grid">
+          <div class="photo-zone">Front</div>
+          <div class="photo-zone">Rear</div>
+          <div class="photo-zone">Driver Side</div>
+          <div class="photo-zone">Passenger Side</div>
+          <div class="photo-zone">Interior Front</div>
+          <div class="photo-zone">Interior Rear</div>
+          <div class="photo-zone">Odometer</div>
+          <div class="photo-zone">Engine Bay</div>
+        </div>
+      </div>
+
+      <!-- ═══ SELLER PITCH (shared) ═══ -->
+      <div class="form-section">
+        <div class="form-section-title" id="pitchTitle">🏢 Your Dealer Pitch</div>
         <div class="form-group">
-          <label>Tell the buyer why your vehicle and dealership stand out</label>
-          <textarea placeholder="e.g. Local lease return, non-smoker, all service at Honda dealership. OTD price honored for 7 days. We're a family-owned dealership with 5-star reviews.">Local lease return, non-smoker, all service records at Honda dealership. This OTD price is honored for 7 days. Financing also available if needed.</textarea>
-          <div style="font-size:11px;color:var(--gray-400);margin-top:4px;text-align:right;">148 / 300 characters</div>
+          <label id="pitchLabel">Tell this buyer why your vehicle is the right choice. Max 300 characters.</label>
+          <textarea id="pitchText" maxlength="300" placeholder="e.g. This Accord has been dealer-maintained since new, never had an accident, and is priced $1,200 under market. We offer financing and can have it ready for test drive same day."></textarea>
+          <div class="char-count"><span id="pitchCount">0</span> / 300</div>
         </div>
       </div>
 
-      <!-- Photos -->
-      <div class="form-section">
-        <div class="form-section-title">📷 Photos (Minimum 8 Required)</div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;">
-          <div class="upload-zone"><span class="upload-icon">📸</span>Front</div>
-          <div class="upload-zone"><span class="upload-icon">📸</span>Rear</div>
-          <div class="upload-zone"><span class="upload-icon">📸</span>Driver Side</div>
-          <div class="upload-zone"><span class="upload-icon">📸</span>Passenger Side</div>
-          <div class="upload-zone"><span class="upload-icon">📸</span>Engine Bay</div>
-          <div class="upload-zone"><span class="upload-icon">📸</span>Odometer</div>
-          <div class="upload-zone"><span class="upload-icon">📸</span>Interior Front</div>
-          <div class="upload-zone"><span class="upload-icon">📸</span>Interior Rear</div>
-        </div>
-        <div style="font-size:12px;color:var(--gray-400);">+ Additional damage photos required for any disclosed issues</div>
-      </div>
-
-      <div class="form-footer">
-        <div class="form-note">Your response will be reviewed by our AI and displayed on the buyer's dashboard</div>
-        <button class="btn btn-primary btn-lg" onclick="showView('seller-dashboard')">Submit Response →</button>
+      <div class="form-actions">
+        <button class="btn btn-outline" onclick="showView('seller-dashboard')">Cancel</button>
+        <button class="btn btn-primary btn-lg" onclick="showView('buyer-dashboard')">Submit Response →</button>
       </div>
 
     </div>
   </div>
 </div>
 
-<!-- ════════════════════════════════════ -->
-<!-- VIEW: DEALER SIGNUP                  -->
-<!-- ════════════════════════════════════ -->
 <div id="view-dealer-signup" class="view">
   <div class="app-container">
     <div class="page-header">
@@ -3128,6 +3273,41 @@
     // Trigger match count update after model change
     if (modelSelectId === 'bModel') updateBuyerMatchCount();
     if (modelSelectId === 'invModel') updateSellerMatchCount();
+  }
+
+  function switchSellerType(type) {
+    const isDealer = type === 'dealer';
+
+    // Toggle active button styles
+    document.getElementById('btnDealer').classList.toggle('active', isDealer);
+    document.getElementById('btnPrivate').classList.toggle('active', !isDealer);
+
+    // Show/hide dealer-only section
+    document.getElementById('dealerSection').style.display = isDealer ? '' : 'none';
+    document.getElementById('privateSection').style.display = isDealer ? 'none' : '';
+
+    // Show/hide OTD sections
+    document.getElementById('dealerOTD').style.display = isDealer ? '' : 'none';
+    document.getElementById('privateOTD').style.display = isDealer ? 'none' : '';
+
+    // Update hint text
+    document.getElementById('sellerTypeHint').textContent = isDealer
+      ? 'Showing the dealer form — includes dealership info, financing, and warranty fields.'
+      : 'Showing the private seller form — includes title status, lien, and smog responsibility fields.';
+
+    // Update pitch section title and placeholder
+    document.getElementById('pitchTitle').textContent = isDealer
+      ? '🏢 Your Dealer Pitch'
+      : '👤 Your Seller Pitch';
+    document.getElementById('pitchLabel').textContent = isDealer
+      ? 'Tell this buyer why your vehicle is the right choice. Max 300 characters.'
+      : 'Tell the buyer about yourself and the car. Be honest and specific. Max 300 characters.';
+    document.getElementById('pitchText').placeholder = isDealer
+      ? 'e.g. This Accord has been dealer-maintained since new, never had an accident, and is priced $1,200 under market. We offer financing and can have it ready for test drive same day.'
+      : 'e.g. I bought this car new and it's been my daily driver for 4 years. Always serviced on time, no accidents, clean title. Selling because I just got a new truck.';
+
+    // Reset OTD total
+    document.getElementById('respOTDTotal').textContent = '$0';
   }
 
   function toggleMobileMenu() {
