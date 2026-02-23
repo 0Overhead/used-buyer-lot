@@ -1,0 +1,4536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OTD4Me — Know Your Out-The-Door Price</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FDFAF4;
+    --white: #FFFFFF;
+    --navy: #1B2A4A;
+    --blue: #2563EB;
+    --blue-light: #EFF6FF;
+    --green: #16A34A;
+    --green-light: #F0FDF4;
+    --amber: #D97706;
+    --amber-light: #FFFBEB;
+    --red: #DC2626;
+    --gray-50: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-400: #9CA3AF;
+    --gray-600: #4B5563;
+    --gray-800: #1F2937;
+    --border: #E5E7EB;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--gray-800);
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--white);
+    border-bottom: 2px solid var(--navy);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--navy);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1;
+  }
+
+  .logo-text span {
+    color: var(--blue);
+  }
+
+  .nav-tagline {
+    font-size: 11px;
+    color: var(--gray-400);
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .btn {
+    padding: 8px 18px;
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-primary {
+    background: var(--navy);
+    color: white;
+  }
+  .btn-primary:hover { background: #243759; transform: translateY(-1px); box-shadow: var(--shadow-md); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--navy);
+    border: 2px solid var(--navy);
+  }
+  .btn-outline:hover { background: var(--navy); color: white; }
+
+  .btn-blue {
+    background: var(--blue);
+    color: white;
+  }
+  .btn-blue:hover { background: #1D4ED8; transform: translateY(-1px); }
+
+  .btn-green {
+    background: var(--green);
+    color: white;
+  }
+  .btn-green:hover { background: #15803D; }
+
+  .btn-sm { padding: 6px 14px; font-size: 13px; }
+  .btn-lg { padding: 14px 28px; font-size: 16px; }
+
+  /* ── VIEWS ── */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--navy);
+    color: white;
+    padding: 60px 24px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    background: rgba(37,99,235,0.15);
+    border-radius: 50%;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -40px;
+    width: 250px; height: 250px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+
+  .hero-eyebrow {
+    display: inline-block;
+    background: var(--blue);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: #60A5FA;
+  }
+
+  .hero-sub {
+    font-size: 18px;
+    color: rgba(255,255,255,0.75);
+    max-width: 520px;
+    margin: 0 auto 32px;
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+
+  .otd-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(22,163,74,0.15);
+    border: 1px solid rgba(22,163,74,0.4);
+    color: #86EFAC;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #60A5FA;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 2px;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .how {
+    background: var(--white);
+    padding: 50px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--navy);
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .section-sub {
+    text-align: center;
+    color: var(--gray-600);
+    margin-bottom: 36px;
+    font-size: 15px;
+  }
+
+  .steps {
+    display: flex;
+    gap: 24px;
+    max-width: 900px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .step {
+    flex: 1;
+    min-width: 200px;
+    max-width: 240px;
+    text-align: center;
+    padding: 24px 16px;
+    background: var(--gray-50);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    position: relative;
+  }
+
+  .step-num {
+    width: 40px; height: 40px;
+    background: var(--navy);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    margin: 0 auto 14px;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .step h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+
+  .step p {
+    font-size: 13px;
+    color: var(--gray-600);
+    line-height: 1.5;
+  }
+
+  /* ── MAIN APP LAYOUT ── */
+  .app-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  /* ── BUYER REQUEST FORM ── */
+  .form-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .form-section {
+    padding: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .form-section:last-child { border-bottom: none; }
+
+  .form-section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .form-row.single { grid-template-columns: 1fr; }
+  .form-row.thirds { grid-template-columns: 1fr 1fr 1fr; }
+
+  .form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-600);
+    margin-bottom: 5px;
+  }
+
+  .form-group select,
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--gray-800);
+    background: var(--white);
+    transition: border-color 0.15s;
+    appearance: none;
+  }
+
+  .form-group select:focus,
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 90px;
+    line-height: 1.5;
+  }
+
+  .multi-select-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .ms-option {
+    padding: 6px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.12s;
+    user-select: none;
+    font-weight: 400;
+    color: var(--gray-600);
+    background: var(--white);
+  }
+
+  .ms-option:hover { border-color: var(--blue); color: var(--blue); }
+  .ms-option.selected {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: white;
+    font-weight: 500;
+  }
+
+  .ms-option.open-to { border-style: dashed; }
+  .ms-option.open-to.selected { background: var(--navy); border-color: var(--navy); border-style: solid; }
+
+  .form-footer {
+    padding: 20px 24px;
+    background: var(--gray-50);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .form-note {
+    font-size: 12px;
+    color: var(--gray-400);
+  }
+
+  /* ── BUYER DASHBOARD ── */
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+
+  .sidebar-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    padding: 20px;
+    position: sticky;
+    top: 80px;
+  }
+
+  .sidebar-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gray-400);
+    margin-bottom: 12px;
+  }
+
+  .request-summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--gray-100);
+    font-size: 13px;
+  }
+
+  .request-summary-item:last-child { border-bottom: none; }
+  .rsi-label { color: var(--gray-400); font-weight: 400; }
+  .rsi-value { color: var(--navy); font-weight: 500; text-align: right; max-width: 55%; }
+
+  .responses-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* ── RESPONSE CARD ── */
+  .response-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    transition: box-shadow 0.2s, transform 0.2s;
+    cursor: pointer;
+  }
+
+  .response-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .response-card.top-match {
+    border: 2px solid var(--green);
+  }
+
+  .card-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .seller-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .seller-avatar {
+    width: 44px; height: 44px;
+    border-radius: 8px;
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+    flex-shrink: 0;
+  }
+
+  .seller-avatar.private {
+    background: var(--gray-400);
+    font-size: 18px;
+  }
+
+  .seller-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--navy);
+  }
+
+  .seller-sub {
+    font-size: 12px;
+    color: var(--gray-400);
+    margin-top: 1px;
+  }
+
+  .verified-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--blue-light);
+    color: var(--blue);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 12px;
+    margin-left: 6px;
+  }
+
+  .private-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--gray-100);
+    color: var(--gray-600);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 12px;
+    margin-left: 6px;
+  }
+
+  .match-score {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+  }
+
+  .score-pill {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .score-high { background: var(--green-light); color: var(--green); }
+  .score-mid { background: var(--amber-light); color: var(--amber); }
+  .score-low { background: #FEF2F2; color: var(--red); }
+
+  .top-match-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .card-body {
+    padding: 16px 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .card-stat {
+    text-align: center;
+  }
+
+  .card-stat-value {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--navy);
+    font-family: 'Playfair Display', serif;
+  }
+
+  .card-stat-label {
+    font-size: 11px;
+    color: var(--gray-400);
+    margin-top: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .otd-stat .card-stat-value { color: var(--green); font-size: 20px; }
+
+  .card-ai {
+    padding: 12px 20px;
+    background: #F8FAFF;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .ai-icon {
+    width: 24px; height: 24px;
+    background: var(--blue);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .ai-text {
+    font-size: 13px;
+    color: var(--gray-600);
+    line-height: 1.5;
+  }
+
+  .ai-text strong { color: var(--navy); }
+
+  .card-pitch {
+    padding: 10px 20px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--gray-600);
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  .card-pitch span { color: var(--gray-400); font-style: normal; font-size: 11px; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 3px; }
+
+  .card-actions {
+    padding: 14px 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .flag-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 10px 20px;
+    border-top: 1px solid var(--border);
+    background: var(--gray-50);
+  }
+
+  .flag {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-weight: 500;
+  }
+
+  .flag-good { background: var(--green-light); color: var(--green); }
+  .flag-warn { background: var(--amber-light); color: var(--amber); }
+  .flag-bad { background: #FEF2F2; color: var(--red); }
+
+  /* ── SELLER DASHBOARD ── */
+  .tabs {
+    display: flex;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 24px;
+    gap: 0;
+  }
+
+  .tab {
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gray-400);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.15s;
+  }
+
+  .tab.active { color: var(--navy); border-bottom-color: var(--navy); font-weight: 600; }
+  .tab:hover { color: var(--navy); }
+
+  .buyer-request-row {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 12px;
+    transition: box-shadow 0.15s;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .buyer-request-row:hover { box-shadow: var(--shadow-md); }
+
+  .brr-left { flex: 1; min-width: 200px; }
+  .brr-title { font-weight: 600; color: var(--navy); font-size: 15px; margin-bottom: 4px; }
+  .brr-details { font-size: 13px; color: var(--gray-400); }
+
+  .brr-center {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .brr-stat { text-align: center; }
+  .brr-stat-val { font-weight: 700; color: var(--navy); font-size: 15px; }
+  .brr-stat-label { font-size: 11px; color: var(--gray-400); text-transform: uppercase; }
+
+  /* ── OTD BREAKDOWN ── */
+  .otd-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  .otd-table td { padding: 7px 0; border-bottom: 1px solid var(--gray-100); }
+  .otd-table td:last-child { text-align: right; font-weight: 500; }
+  .otd-table tr:last-child td { border-bottom: none; font-weight: 700; font-size: 15px; color: var(--green); padding-top: 12px; }
+
+  /* ── MESSAGING ── */
+  .messaging-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 0;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    height: 520px;
+  }
+
+  .msg-sidebar {
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+  }
+
+  .msg-sidebar-header {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--navy);
+  }
+
+  .msg-thread {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+
+  .msg-thread:hover { background: var(--gray-50); }
+  .msg-thread.active { background: var(--blue-light); }
+
+  .msg-thread-name { font-weight: 600; font-size: 13px; color: var(--navy); margin-bottom: 2px; }
+  .msg-thread-preview { font-size: 12px; color: var(--gray-400); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .msg-thread-time { font-size: 11px; color: var(--gray-400); float: right; margin-top: 1px; }
+
+  .msg-main {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .msg-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .msg-header-title { font-weight: 600; color: var(--navy); font-size: 15px; }
+  .msg-header-sub { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
+
+  .msg-vehicle-ref {
+    background: var(--blue-light);
+    border: 1px solid #BFDBFE;
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    margin: 12px 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+  }
+
+  .mvr-label { color: var(--blue); font-weight: 600; }
+  .mvr-details { color: var(--gray-600); }
+
+  .msg-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .msg-bubble {
+    max-width: 75%;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .msg-bubble.incoming {
+    background: var(--gray-100);
+    color: var(--gray-800);
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+  }
+
+  .msg-bubble.outgoing {
+    background: var(--navy);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+  }
+
+  .msg-time { font-size: 10px; margin-top: 4px; opacity: 0.5; }
+
+  .msg-input-area {
+    padding: 14px 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+  }
+
+  .msg-input-area input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+  }
+
+  .msg-input-area input:focus { outline: none; border-color: var(--blue); }
+
+  /* ── DEALER SIGNUP ── */
+  .dealer-signup-header {
+    background: var(--navy);
+    color: white;
+    padding: 28px 24px;
+    border-radius: var(--radius) var(--radius) 0 0;
+    text-align: center;
+  }
+
+  .dealer-signup-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+
+  .dealer-signup-header p {
+    font-size: 13px;
+    opacity: 0.7;
+  }
+
+  .upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-sm);
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--gray-400);
+    font-size: 13px;
+  }
+
+  .upload-zone:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
+
+  .upload-zone .upload-icon { font-size: 28px; display: block; margin-bottom: 8px; }
+
+  /* ── NOTIFICATION BADGE ── */
+  .notif-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px; height: 18px;
+    background: var(--red);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 50%;
+    margin-left: 6px;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 700px) {
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .card-body { grid-template-columns: repeat(2, 1fr); }
+    .messaging-layout { grid-template-columns: 1fr; height: auto; }
+    .msg-sidebar { display: none; }
+    .form-row { grid-template-columns: 1fr; }
+    .form-row.thirds { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--gray-400);
+  }
+  .empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-title { font-size: 16px; font-weight: 600; color: var(--gray-600); margin-bottom: 6px; }
+
+  /* ── MISC ── */
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+  .text-green { color: var(--green); }
+  .text-amber { color: var(--amber); }
+  .text-red { color: var(--red); }
+  .text-blue { color: var(--blue); }
+  .mt-4 { margin-top: 16px; }
+  .mb-4 { margin-bottom: 16px; }
+
+  .alert {
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .alert-green { background: var(--green-light); color: var(--green); border: 1px solid #BBF7D0; }
+  .alert-blue { background: var(--blue-light); color: var(--blue); border: 1px solid #BFDBFE; }
+  .live-feed-section { background: var(--cream); padding: 40px 24px 36px; border-bottom: 1px solid var(--border); }
+  .live-feed-header { display: flex; align-items: flex-start; justify-content: space-between; max-width: 1060px; margin: 0 auto 24px; flex-wrap: wrap; gap: 12px; }
+  .live-indicator { display: flex; align-items: center; gap: 8px; background: var(--white); border: 1px solid var(--border); padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--green); box-shadow: var(--shadow-sm); white-space: nowrap; }
+  .live-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; display: inline-block; animation: pulse 1.8s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.4;transform:scale(0.7);} }
+  .feed-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 1060px; margin: 0 auto; }
+  @media (max-width: 860px) { .feed-grid { grid-template-columns: repeat(2,1fr); } }
+  @media (max-width: 560px) { .feed-grid { grid-template-columns: 1fr; } }
+  .feed-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow-sm); transition: box-shadow 0.2s, transform 0.2s; animation: fadeInUp 0.4s ease both; }
+  .feed-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+  @keyframes fadeInUp { from{opacity:0;transform:translateY(12px);} to{opacity:1;transform:translateY(0);} }
+  .feed-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .feed-avatar { width:36px;height:36px;border-radius:50%;background:var(--navy);color:white;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0; }
+  .feed-time { font-size:11px;color:var(--gray-400);background:var(--gray-100);padding:3px 8px;border-radius:10px; }
+  .feed-card-title { font-family:"Playfair Display",serif;font-size:16px;font-weight:700;color:var(--navy);margin-bottom:6px;line-height:1.2; }
+  .feed-card-story { font-size:13px;color:var(--gray-600);line-height:1.5;margin-bottom:12px;font-style:italic; }
+  .feed-chips { display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px; }
+  .feed-chip { font-size:11px;padding:3px 10px;border-radius:12px;font-weight:500;background:var(--blue-light);color:var(--blue); }
+  .feed-chip.budget { background:var(--green-light);color:var(--green); }
+  .feed-chip.location { background:var(--gray-100);color:var(--gray-600); }
+  .feed-chip.timeline { background:var(--amber-light);color:var(--amber); }
+  .feed-card-footer { display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid var(--border);font-size:12px;color:var(--gray-400); }
+  .feed-responses { font-weight:600;color:var(--navy); }
+  .feed-card-cta { background:var(--navy);border:2px solid var(--navy);border-radius:var(--radius);padding:28px 22px;box-shadow:var(--shadow-md);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;animation:fadeInUp 0.5s ease both; }
+  .cta-card-icon { font-size:36px;margin-bottom:4px; }
+  .cta-card-title { font-family:"Playfair Display",serif;font-size:20px;font-weight:700;color:white;line-height:1.2; }
+  .cta-card-sub { font-size:13px;color:rgba(255,255,255,0.65);line-height:1.5; }
+  .cta-card-actions { display:flex;flex-direction:column;gap:8px;width:100%;margin-top:4px; }
+  .btn-white { background:white;color:var(--navy);border:none;font-weight:700; }
+  .btn-white:hover { background:var(--cream);transform:translateY(-1px); }
+  .btn-ghost { background:transparent;color:rgba(255,255,255,0.75);border:1px solid rgba(255,255,255,0.3);font-size:13px; }
+  .btn-ghost:hover { background:rgba(255,255,255,0.1);color:white; }
+  .feed-footer { max-width:1060px;margin:20px auto 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px; }
+  .learn-more-link { font-size:14px;color:var(--blue);text-decoration:none;font-weight:500;display:flex;align-items:center;gap:4px; }
+  .learn-more-link:hover { text-decoration:underline; }
+  /* -- HAMBURGER -- */
+  .nav-desktop { display:flex; }
+  .hamburger {
+    display:none; flex-direction:column; justify-content:center; gap:5px;
+    width:40px; height:40px; background:none; border:1.5px solid var(--border);
+    border-radius:var(--radius-sm); cursor:pointer; padding:8px;
+    transition:border-color 0.15s; flex-shrink:0;
+  }
+  .hamburger:hover { border-color:var(--navy); }
+  .hamburger span {
+    display:block; height:2px; background:var(--navy); border-radius:2px;
+    transition:all 0.25s ease; transform-origin:center;
+  }
+  .hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
+  .hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+  .mobile-menu {
+    display:none; flex-direction:column; background:var(--white);
+    border-bottom:2px solid var(--navy); box-shadow:var(--shadow-md);
+    position:sticky; top:64px; z-index:99; animation:slideDown 0.2s ease both;
+  }
+  .mobile-menu.open { display:flex; }
+  @keyframes slideDown {
+    from { opacity:0; transform:translateY(-8px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  .mobile-menu-item {
+    padding:15px 20px; font-family:"DM Sans",sans-serif; font-size:15px;
+    font-weight:500; color:var(--navy); background:none; border:none;
+    border-bottom:1px solid var(--border); text-align:left; cursor:pointer;
+    text-decoration:none; display:block; transition:background 0.1s;
+  }
+  .mobile-menu-item:hover { background:var(--gray-50); }
+  .mobile-menu-item:last-child { border-bottom:none; }
+  .mobile-menu-divider { height:1px; background:var(--border); margin:4px 0; }
+  @media (max-width:600px) {
+    .nav-desktop { display:none; }
+    .hamburger { display:flex; }
+  }
+
+  /* ── FEED PAGE BAR ── */
+  .feed-page-bar { background:var(--white); border-bottom:1px solid var(--border); padding:16px 20px; }
+  .feed-page-bar-inner { max-width:820px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+  .feed-page-title { font-family:"Playfair Display",serif; font-size:20px; font-weight:700; color:var(--navy); margin-bottom:2px; }
+  .feed-page-sub { font-size:13px; color:var(--gray-400); }
+  .feed-page-actions { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+
+  /* ── FEED LIST ── */
+  .feed-list-container { max-width:820px; margin:0 auto; padding:20px 16px 32px; }
+  .feed-list { display:flex; flex-direction:column; gap:14px; }
+  .feed-list-footer { text-align:center; margin-top:28px; }
+
+  /* ── FULL-WIDTH FEED CARD ── */
+  .feed-card-full { background:var(--white); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow-sm); overflow:hidden; animation:fadeInUp 0.35s ease both; transition:box-shadow 0.2s,transform 0.15s; }
+  .feed-card-full:hover { box-shadow:var(--shadow-md); transform:translateY(-1px); }
+  .feed-card-full .fc-top { display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid var(--border); flex-wrap:wrap; gap:10px; }
+  .fc-buyer-info { display:flex; align-items:center; gap:10px; }
+  .fc-avatar { width:40px; height:40px; border-radius:50%; color:white; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:700; font-family:"Playfair Display",serif; flex-shrink:0; }
+  .fc-name { font-weight:600; font-size:14px; color:var(--navy); }
+  .fc-time { font-size:12px; color:var(--gray-400); margin-top:1px; }
+  .fc-top-right { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .feed-card-full .fc-body { display:grid; grid-template-columns:1fr auto; gap:16px; padding:16px 18px; align-items:start; }
+  @media (max-width:600px) { .feed-card-full .fc-body { grid-template-columns:1fr; } .fc-seller-cta { width:100%; } }
+  .fc-title { font-family:"Playfair Display",serif; font-size:18px; font-weight:700; color:var(--navy); margin-bottom:6px; }
+  .fc-story { font-size:13px; color:var(--gray-600); line-height:1.5; font-style:italic; margin-bottom:12px; }
+  .fc-chips { display:flex; flex-wrap:wrap; gap:6px; }
+  .fc-seller-cta { display:flex; flex-direction:column; align-items:flex-end; gap:8px; min-width:160px; }
+  @media (max-width:600px) { .fc-seller-cta { align-items:flex-start; flex-direction:row; flex-wrap:wrap; } }
+  .fc-budget-box { background:var(--green-light); border:1px solid #BBF7D0; border-radius:var(--radius-sm); padding:8px 14px; text-align:right; width:100%; }
+  @media (max-width:600px) { .fc-budget-box { text-align:left; width:auto; } }
+  .fc-budget-label { font-size:10px; font-weight:600; color:var(--green); text-transform:uppercase; letter-spacing:0.06em; }
+  .fc-budget-val { font-family:"Playfair Display",serif; font-size:18px; font-weight:700; color:var(--green); }
+  .feed-card-full .fc-footer { display:flex; align-items:center; justify-content:space-between; padding:10px 18px; background:var(--gray-50); border-top:1px solid var(--border); font-size:12px; color:var(--gray-400); flex-wrap:wrap; gap:8px; }
+  .fc-footer-left { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  .fc-stat { display:flex; align-items:center; gap:4px; }
+  .fc-stat strong { color:var(--navy); font-weight:600; }
+
+  /* ── CTA BANNER CARD ── */
+  .feed-cta-banner { background:var(--navy); border-radius:var(--radius); padding:24px; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; animation:fadeInUp 0.35s ease both; box-shadow:var(--shadow-md); }
+  .fcb-left { flex:1; min-width:200px; }
+  .fcb-title { font-family:"Playfair Display",serif; font-size:20px; font-weight:700; color:white; margin-bottom:6px; }
+  .fcb-sub { font-size:13px; color:rgba(255,255,255,0.65); line-height:1.5; }
+  .fcb-actions { display:flex; gap:10px; flex-wrap:wrap; align-items:center; flex-shrink:0; }
+
+  /* ── SELLER STATS BAR ── */
+  .seller-stats-bar {
+    display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:24px;
+  }
+  @media(max-width:640px){ .seller-stats-bar{grid-template-columns:repeat(2,1fr);} }
+  .seller-stat-box {
+    background:var(--white); border:1px solid var(--border); border-radius:var(--radius);
+    padding:14px 16px; text-align:center; box-shadow:var(--shadow-sm);
+  }
+  .seller-stat-box.highlight { border:2px solid var(--blue); background:var(--blue-light); }
+  .ssb-val { font-family:"Playfair Display",serif; font-size:26px; font-weight:700; color:var(--navy); }
+  .seller-stat-box.highlight .ssb-val { color:var(--blue); }
+  .ssb-label { font-size:11px; color:var(--gray-400); text-transform:uppercase; letter-spacing:0.05em; margin-top:3px; }
+
+  /* ── SELLER TABS ── */
+  .seller-tab-content { animation: fadeInUp 0.25s ease both; }
+
+  /* ── MATCHED ROW ── */
+  .buyer-request-row.matched { border-left:3px solid var(--green); }
+
+  /* ── INVENTORY ADD PANEL ── */
+  .inventory-add-panel {
+    background:var(--white); border:1.5px solid var(--blue); border-radius:var(--radius);
+    margin-bottom:20px; overflow:hidden; box-shadow:var(--shadow-md);
+  }
+  .inv-add-header {
+    background:var(--blue-light); padding:14px 20px;
+    display:flex; align-items:center; justify-content:space-between;
+    border-bottom:1px solid #BFDBFE;
+  }
+  .inv-add-form { padding:20px; }
+
+  /* ── LIVE MATCH COUNTER BAR ── */
+  .match-counter-bar {
+    background:var(--navy); color:white;
+    padding:14px 20px; display:flex; align-items:center; gap:14px;
+    flex-wrap:wrap;
+  }
+  .mcb-icon { font-size:24px; flex-shrink:0; }
+  .mcb-count {
+    font-family:"Playfair Display",serif; font-size:32px; font-weight:700;
+    color:#60A5FA; line-height:1;
+  }
+  .mcb-label { font-size:13px; color:rgba(255,255,255,0.7); margin-top:2px; }
+  .mcb-sub { font-size:12px; color:rgba(255,255,255,0.45); margin-left:auto; }
+  @media(max-width:500px){ .mcb-sub{margin-left:0; width:100%;} }
+
+  /* ── INVENTORY CARD ── */
+  .inventory-card {
+    background:var(--white); border:1px solid var(--border); border-radius:var(--radius);
+    margin-bottom:12px; overflow:hidden; box-shadow:var(--shadow-sm);
+    transition:box-shadow 0.15s;
+  }
+  .inventory-card:hover { box-shadow:var(--shadow-md); }
+  .inv-card-top {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 18px; flex-wrap:wrap; gap:10px;
+  }
+  .inv-car-title { font-family:"Playfair Display",serif; font-size:16px; font-weight:700; color:var(--navy); }
+  .inv-car-sub { font-size:12px; color:var(--gray-400); margin-top:2px; }
+  .inv-card-body {
+    display:grid; grid-template-columns:repeat(4,1fr); gap:0;
+    border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+  }
+  @media(max-width:600px){ .inv-card-body{grid-template-columns:repeat(2,1fr);} }
+  .inv-stat {
+    padding:12px 14px; text-align:center; border-right:1px solid var(--border);
+  }
+  .inv-stat:last-child { border-right:none; }
+  .inv-stat-val { font-weight:700; font-size:15px; color:var(--navy); font-family:"Playfair Display",serif; }
+  .inv-stat-label { font-size:10px; color:var(--gray-400); text-transform:uppercase; letter-spacing:0.04em; margin-top:2px; }
+
+  /* ── BUYER MATCH PULSE ── */
+  .inv-match-bar {
+    padding:10px 18px; background:var(--green-light);
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;
+  }
+  .inv-match-bar.zero { background:var(--gray-50); }
+  .imb-left { display:flex; align-items:center; gap:10px; }
+  .imb-count {
+    font-family:"Playfair Display",serif; font-size:22px; font-weight:700; color:var(--green);
+  }
+  .inv-match-bar.zero .imb-count { color:var(--gray-400); }
+  .imb-label { font-size:13px; color:var(--green); font-weight:500; }
+  .inv-match-bar.zero .imb-label { color:var(--gray-400); }
+  .inv-card-actions { padding:12px 18px; display:flex; gap:8px; flex-wrap:wrap; }
+
+  /* ── BUYER FORM MATCH COUNTER ── */
+  .buyer-match-banner {
+    background:var(--navy); border-radius:var(--radius);
+    padding:16px 20px; margin-bottom:20px;
+    display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  }
+  .bmb-icon { font-size:28px; flex-shrink:0; }
+  .bmb-count {
+    font-family:"Playfair Display",serif; font-size:36px; font-weight:700;
+    color:#60A5FA; line-height:1;
+  }
+  .bmb-label { font-size:14px; color:rgba(255,255,255,0.75); margin-top:3px; }
+  .bmb-sub { font-size:12px; color:rgba(255,255,255,0.4); margin-top:2px; }
+  .bmb-right { margin-left:auto; text-align:right; }
+  @media(max-width:500px){ .bmb-right{margin-left:0;} }
+  .bmb-breakdown { font-size:12px; color:rgba(255,255,255,0.55); line-height:1.7; }
+
+  /* -- SITE FOOTER -- */
+  .site-footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 24px 20px;
+    font-size: 12px;
+    line-height: 1.8;
+    margin-top: 40px;
+  }
+  .site-footer strong { color: white; font-size: 13px; }
+  .site-footer a { color: rgba(255,255,255,0.6); text-decoration: none; margin: 0 8px; }
+  .site-footer a:hover { color: white; text-decoration: underline; }
+  .site-footer .footer-disclaimer {
+    max-width: 640px;
+    margin: 10px auto 0;
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    line-height: 1.6;
+  }
+
+  /* ── UNIFIED DASHBOARD TABS ────────────── */
+  .ud-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .ud-tab {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    color: var(--gray-600);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .ud-tab:hover {
+    border-color: var(--navy);
+    color: var(--navy);
+  }
+
+  .ud-tab.active {
+    background: var(--navy);
+    color: white;
+    border-color: var(--navy);
+  }
+
+  .ud-panel { animation: fadeIn 0.2s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── MATCH COMPARISON TABLE ─────────────── */
+  .match-table-wrap {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .match-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    background: var(--white);
+    min-width: 700px;
+  }
+
+  .match-table thead tr {
+    background: var(--gray-50);
+    border-bottom: 2px solid var(--border);
+  }
+
+  .match-table th {
+    padding: 16px 14px;
+    text-align: left;
+    vertical-align: top;
+    border-right: 1px solid var(--border);
+  }
+
+  .match-table th:last-child { border-right: none; }
+
+  .match-table td {
+    padding: 12px 14px;
+    vertical-align: middle;
+    border-right: 1px solid var(--border);
+    color: var(--gray-700);
+    line-height: 1.4;
+  }
+
+  .match-table td:last-child { border-right: none; }
+
+  .match-table .row-alt { background: var(--gray-50); }
+
+  .match-table .col-top {
+    background: #FFFBEB;
+    border-left: 3px solid var(--amber);
+  }
+
+  .match-table thead .col-top {
+    background: #FEF3C7;
+    border-left: 3px solid var(--amber);
+  }
+
+  .criteria-col {
+    font-weight: 600;
+    color: var(--navy);
+    background: var(--white) !important;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  .row-alt .criteria-col { background: var(--gray-50) !important; }
+
+  .mt-rank {
+    font-size: 11px;
+    color: var(--gray-400);
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .mt-seller-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+
+  .mt-badge {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 100px;
+    margin-bottom: 8px;
+  }
+
+  .mt-badge.verified { background: #EFF6FF; color: var(--blue); }
+  .mt-badge.private { background: var(--gray-100); color: var(--gray-600); }
+
+  .mt-score {
+    display: inline-block;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 8px;
+  }
+
+  .score-high { background: #F0FDF4; color: var(--green); }
+  .score-mid  { background: #FFFBEB; color: var(--amber); }
+  .score-low  { background: #FEF2F2; color: var(--red); }
+
+  .good-val { color: var(--green); font-weight: 500; }
+  .warn-val { color: var(--amber); font-weight: 500; }
+  .bad-val  { color: var(--red);   font-weight: 500; }
+
+  /* ── DEALER UPGRADE BANNER ──────────────── */
+  .dealer-upgrade-banner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
+    border: 1px solid #BFDBFE;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .dub-icon { font-size: 28px; }
+
+  .dub-content { flex: 1; min-width: 200px; }
+
+  .dub-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+
+  .dub-desc {
+    font-size: 13px;
+    color: var(--gray-600);
+    line-height: 1.5;
+  }
+
+
+  /* ── MATCH CARDS (mobile-first vertical) ── */
+  .match-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .match-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .match-card-top {
+    border: 2px solid var(--amber);
+  }
+
+  .mc-rank-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: var(--gray-50);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .match-card-top .mc-rank-bar {
+    background: #FEF3C7;
+    border-bottom-color: var(--amber);
+  }
+
+  .mc-rank-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+
+  .mc-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 16px 0;
+  }
+
+  .mc-avatar {
+    width: 42px; height: 42px;
+    background: var(--navy);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: white;
+    flex-shrink: 0;
+  }
+
+  .mc-seller-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 3px;
+  }
+
+  .mc-location {
+    font-size: 12px;
+    color: var(--gray-400);
+  }
+
+  .mc-vehicle {
+    padding: 12px 16px 4px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--navy);
+  }
+
+  .mc-otd {
+    padding: 2px 16px 12px;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--green);
+    font-family: 'Playfair Display', serif;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mc-otd-label {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--gray-400);
+    font-family: inherit;
+  }
+
+  .mc-flags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mc-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .mc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 16px;
+    border-bottom: 1px solid var(--gray-100);
+    gap: 12px;
+  }
+
+  .mc-row:last-child { border-bottom: none; }
+
+  .mc-row-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    flex-shrink: 0;
+  }
+
+  .mc-row-val {
+    font-size: 13px;
+    color: var(--gray-700);
+    text-align: right;
+  }
+
+  .mc-ai {
+    padding: 14px 16px;
+    background: #F8FAFF;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--gray-600);
+    line-height: 1.55;
+  }
+
+  .mc-pitch {
+    padding: 12px 16px;
+    background: var(--gray-50);
+    font-size: 13px;
+    color: var(--gray-600);
+    font-style: italic;
+    border-top: 1px solid var(--border);
+  }
+
+  .mc-actions {
+    display: flex;
+    gap: 10px;
+    padding: 14px 16px;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .mc-actions .btn { flex: 1; text-align: center; justify-content: center; }
+
+
+  /* ══════════════════════════════════════
+     AUTH & ONBOARDING VIEWS
+  ══════════════════════════════════════ */
+
+  .auth-wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--cream);
+    padding: 24px;
+  }
+
+  .auth-card {
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: 0 8px 40px rgba(27,42,74,0.10);
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .auth-logo {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .auth-logo-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px; height: 52px;
+    background: var(--navy);
+    border-radius: 14px;
+    font-size: 26px;
+    margin-bottom: 10px;
+  }
+
+  .auth-logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.5px;
+  }
+
+  .auth-logo-text span { color: var(--blue); }
+
+  .auth-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  .auth-sub {
+    font-size: 14px;
+    color: var(--gray-400);
+    text-align: center;
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  .auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .auth-divider::before,
+  .auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gray-200);
+  }
+
+  .auth-divider span {
+    font-size: 12px;
+    color: var(--gray-400);
+    white-space: nowrap;
+  }
+
+  .btn-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 13px 20px;
+    background: white;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--gray-800);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+
+  .btn-google:hover {
+    border-color: var(--gray-400);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .btn-google svg { flex-shrink: 0; }
+
+  .auth-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .auth-input {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--navy);
+    background: white;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+  }
+
+  .auth-input:focus {
+    outline: none;
+    border-color: var(--blue);
+  }
+
+  .auth-input::placeholder { color: var(--gray-400); }
+
+  .btn-auth-primary {
+    width: 100%;
+    padding: 14px;
+    background: var(--navy);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 4px;
+  }
+
+  .btn-auth-primary:hover { background: #0F1E35; transform: translateY(-1px); }
+  .btn-auth-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .auth-switch {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: var(--gray-400);
+  }
+
+  .auth-switch a {
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .auth-switch a:hover { text-decoration: underline; }
+
+  .auth-error {
+    background: #FEF2F2;
+    border: 1px solid #FECACA;
+    color: var(--red);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  .auth-error.visible { display: block; }
+
+  .auth-success {
+    background: var(--green-light);
+    border: 1px solid #BBF7D0;
+    color: var(--green);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  .auth-success.visible { display: block; }
+
+  /* ── ONBOARDING ── */
+  .onboard-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .onboard-btn {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: white;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    font-family: 'DM Sans', sans-serif;
+    width: 100%;
+  }
+
+  .onboard-btn:hover {
+    border-color: var(--blue);
+    box-shadow: 0 4px 16px rgba(37,99,235,0.08);
+    transform: translateY(-1px);
+  }
+
+  .onboard-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+    width: 48px; height: 48px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--gray-50);
+    border-radius: 12px;
+  }
+
+  .onboard-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 3px;
+  }
+
+  .onboard-desc {
+    font-size: 13px;
+    color: var(--gray-400);
+    line-height: 1.4;
+  }
+
+  .onboard-arrow {
+    margin-left: auto;
+    color: var(--gray-400);
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  /* Loading spinner */
+  .auth-spinner {
+    display: inline-block;
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+</style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#" onclick="showView('landing')">
+    <div class="logo-icon">🚗</div>
+    <div>
+      <div class="logo-text">otd<span>4</span>me</div>
+    </div>
+  </a>
+
+  <!-- Desktop nav -->
+  <div class="nav-right nav-desktop">
+    <button class="btn btn-outline btn-sm" id="navDashBtn" onclick="handleDashClick()">Dashboard</button>
+    <button class="btn btn-primary btn-sm" onclick="showView('buyer-form')">Post My Request — Free</button>
+  </div>
+
+  <!-- Hamburger button (mobile only) -->
+  <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileMenu()" aria-label="Menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<!-- Mobile dropdown menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-item" onclick="showView('landing'); closeMobileMenu()">🏠 Home / Live Feed</button>
+  <button class="mobile-menu-item" onclick="showView('buyer-form'); closeMobileMenu()">📋 Post My Request</button>
+  <button class="mobile-menu-item" onclick="handleDashClick(); closeMobileMenu()">🏢 Dashboard</button>
+  <button class="mobile-menu-item" onclick="showView('dealer-signup'); closeMobileMenu()">✅ Register as Seller</button>
+  <div class="mobile-menu-divider"></div>
+  <a href="#how-it-works" class="mobile-menu-item" onclick="closeMobileMenu()">❓ How It Works</a>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- VIEW: AUTH (Login / Signup)          -->
+<!-- ════════════════════════════════════ -->
+<div id="view-auth" class="view">
+  <div class="auth-wrap">
+    <div class="auth-card">
+
+      <div class="auth-logo">
+        <div class="auth-logo-mark">🚗</div>
+        <div class="auth-logo-text">otd<span>4</span>me</div>
+      </div>
+
+      <!-- LOGIN MODE -->
+      <div id="authModeLogin">
+        <div class="auth-title">Welcome back</div>
+        <div class="auth-sub">Sign in to your account</div>
+
+        <div id="authError" class="auth-error"></div>
+        <div id="authSuccess" class="auth-success"></div>
+
+        <button class="btn-google" onclick="signInWithGoogle()">
+          <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z"/></svg>
+          Continue with Google
+        </button>
+
+        <div class="auth-divider"><span>or sign in with email</span></div>
+
+        <div class="auth-input-group">
+          <input class="auth-input" type="email" id="loginEmail" placeholder="Email address" autocomplete="email">
+          <input class="auth-input" type="password" id="loginPassword" placeholder="Password" autocomplete="current-password">
+        </div>
+
+        <button class="btn-auth-primary" id="loginBtn" onclick="signInWithEmail()">Sign In</button>
+
+        <div class="auth-switch">
+          Don't have an account? <a onclick="switchAuthMode('signup')">Create one — free</a>
+        </div>
+        <div class="auth-switch" style="margin-top:10px;">
+          <a onclick="sendPasswordReset()" style="color:var(--gray-400);font-weight:400;">Forgot password?</a>
+        </div>
+      </div>
+
+      <!-- SIGNUP MODE -->
+      <div id="authModeSignup" style="display:none;">
+        <div class="auth-title">Create your account</div>
+        <div class="auth-sub">Free to join. No credit card required.</div>
+
+        <div id="authErrorSignup" class="auth-error"></div>
+        <div id="authSuccessSignup" class="auth-success"></div>
+
+        <button class="btn-google" onclick="signInWithGoogle()">
+          <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z"/></svg>
+          Sign Up with Google
+        </button>
+
+        <div class="auth-divider"><span>or sign up with email</span></div>
+
+        <div class="auth-input-group">
+          <input class="auth-input" type="text" id="signupName" placeholder="Your first name" autocomplete="given-name">
+          <input class="auth-input" type="email" id="signupEmail" placeholder="Email address" autocomplete="email">
+          <input class="auth-input" type="password" id="signupPassword" placeholder="Password (min 8 characters)" autocomplete="new-password">
+        </div>
+
+        <button class="btn-auth-primary" id="signupBtn" onclick="signUpWithEmail()">Create Account — Free</button>
+
+        <div class="auth-switch">
+          Already have an account? <a onclick="switchAuthMode('login')">Sign in</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- VIEW: ONBOARDING                    -->
+<!-- ════════════════════════════════════ -->
+<div id="view-onboarding" class="view">
+  <div class="auth-wrap">
+    <div class="auth-card" style="max-width:480px;">
+
+      <div class="auth-logo">
+        <div class="auth-logo-mark">🚗</div>
+        <div class="auth-logo-text">otd<span>4</span>me</div>
+      </div>
+
+      <div class="auth-title">What brings you here?</div>
+      <div class="auth-sub">We'll set up your dashboard based on your answer. You can always do both.</div>
+
+      <div class="onboard-options">
+
+        <button class="onboard-btn" onclick="completeOnboarding('buyer')">
+          <div class="onboard-icon">🔍</div>
+          <div>
+            <div class="onboard-label">I'm looking to buy a vehicle</div>
+            <div class="onboard-desc">Post a request and let sellers compete with their best OTD price</div>
+          </div>
+          <div class="onboard-arrow">→</div>
+        </button>
+
+        <button class="onboard-btn" onclick="completeOnboarding('seller')">
+          <div class="onboard-icon">🏷️</div>
+          <div>
+            <div class="onboard-label">I have a vehicle to sell</div>
+            <div class="onboard-desc">List your vehicle and respond to matching buyer requests</div>
+          </div>
+          <div class="onboard-arrow">→</div>
+        </button>
+
+        <button class="onboard-btn" onclick="showView('dealer-signup')">
+          <div class="onboard-icon">🏢</div>
+          <div>
+            <div class="onboard-label">I'm a licensed dealer</div>
+            <div class="onboard-desc">Apply for a verified dealer account with full inventory tools</div>
+          </div>
+          <div class="onboard-arrow">→</div>
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- VIEW: LANDING                        -->
+<!-- ════════════════════════════════════ -->
+<div id="view-landing" class="view active">
+
+  <!-- PAGE HEADER BAR -->
+  <div class="feed-page-bar">
+    <div class="feed-page-bar-inner">
+      <div>
+        <div class="feed-page-title">Vehicle Buyer Requests</div>
+        <div class="feed-page-sub">Attract your next vehicle and learn the out-the-door price without speaking to unwelcome sales people. Always free.</div>
+      </div>
+      <div class="feed-page-actions">
+        <div class="live-indicator"><span class="live-dot"></span> Live Feed</div>
+        <button class="btn btn-primary btn-sm" onclick="showView('buyer-form')">+ Post My Request</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEED LIST -->
+  <div class="feed-list-container">
+    <div class="feed-list" id="feedGrid">
+      <!-- Cards injected by JS -->
+    </div>
+    <div class="feed-list-footer">
+      <a href="#how-it-works" class="learn-more-link">How does OTD4Me work? <span>↓</span></a>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="how" id="how-it-works">
+    <div class="section-title">How It Works</div>
+    <p class="section-sub">A free advertising platform for vehicle buyers and sellers. Three simple steps. Zero surprises.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Post Your Request</h3>
+        <p>Tell us exactly what you're looking for — make, model, budget, and features. 100% free. Your contact info stays hidden.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Sellers Respond</h3>
+        <p>Verified dealers and private sellers submit their vehicle details with a complete Out-The-Door price. No vague numbers.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>AI Scores the Offers</h3>
+        <p>Our AI grades each response against your criteria and explains what's a good deal in plain English.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3>You Choose Who to Talk To</h3>
+        <p>Pick your favorite offer and connect. Only then does the seller see your contact information.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="view-buyer-form" class="view">
+  <div class="app-container">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Post Your Vehicle Request</div>
+        <div style="font-size:13px;color:var(--gray-400);margin-top:4px;">Free to post · Your contact info stays hidden until you choose to connect with a seller.</div>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="showView('landing')">← Back</button>
+    </div>
+
+    <!-- LIVE MATCH COUNTER BANNER -->
+    <div class="buyer-match-banner" id="buyerMatchBanner">
+      <div class="bmb-icon">🎯</div>
+      <div>
+        <div class="bmb-count" id="buyerMatchCount">—</div>
+        <div class="bmb-label">vehicles in inventory match your criteria</div>
+        <div class="bmb-sub">Updates as you fill in your request</div>
+      </div>
+      <div class="bmb-right">
+        <div class="bmb-breakdown" id="buyerMatchBreakdown">Select your preferences below<br>to see live matches</div>
+      </div>
+    </div>
+
+    <div class="form-card">
+
+      <!-- Vehicle Criteria -->
+      <div class="form-section">
+        <div class="form-section-title">🚗 Vehicle Criteria</div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Year — From</label>
+            <select onchange="updateBuyerMatchCount()" id="bYear1">
+              <option value="any">Any</option>
+              <option>2005</option><option>2008</option><option>2010</option>
+              <option>2012</option><option>2015</option><option>2016</option>
+              <option>2017</option><option value="2018" selected>2018</option>
+              <option>2019</option><option>2020</option><option>2021</option>
+              <option>2022</option><option>2023</option><option>2024</option>
+              <option>2025</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Year — To</label>
+            <select onchange="updateBuyerMatchCount()" id="bYear2">
+              <option value="newer">2025 or Newer</option>
+              <option>2025</option><option>2024</option>
+              <option selected>2023</option><option>2022</option>
+              <option>2021</option><option>2020</option>
+              <option>2019</option><option>2018</option>
+              <option>2017</option><option>2016</option>
+              <option>2015</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Make <span style="font-size:11px;color:var(--gray-400);font-weight:400;">— select one</span></label>
+            <select id="bMake" onchange="populateModels('bMake','bModel'); updateBuyerMatchCount()">
+              <option value="">Select make</option>
+                <option value="Acura">Acura</option>
+                <option value="Alfa Romeo">Alfa Romeo</option>
+                <option value="Audi">Audi</option>
+                <option value="BMW">BMW</option>
+                <option value="Buick">Buick</option>
+                <option value="Cadillac">Cadillac</option>
+                <option value="Chevrolet">Chevrolet</option>
+                <option value="Chrysler">Chrysler</option>
+                <option value="Dodge">Dodge</option>
+                <option value="Fiat">Fiat</option>
+                <option value="Ford">Ford</option>
+                <option value="GMC">GMC</option>
+                <option value="Genesis">Genesis</option>
+                <option value="Honda">Honda</option>
+                <option value="Hyundai">Hyundai</option>
+                <option value="Infiniti">Infiniti</option>
+                <option value="Jaguar">Jaguar</option>
+                <option value="Jeep">Jeep</option>
+                <option value="Kia">Kia</option>
+                <option value="Land Rover">Land Rover</option>
+                <option value="Lexus">Lexus</option>
+                <option value="Lincoln">Lincoln</option>
+                <option value="Lucid">Lucid</option>
+                <option value="MINI">MINI</option>
+                <option value="Mazda">Mazda</option>
+                <option value="Mercedes-Benz">Mercedes-Benz</option>
+                <option value="Mitsubishi">Mitsubishi</option>
+                <option value="Nissan">Nissan</option>
+                <option value="Polestar">Polestar</option>
+                <option value="Porsche">Porsche</option>
+                <option value="RAM">RAM</option>
+                <option value="Rivian">Rivian</option>
+                <option value="Subaru">Subaru</option>
+                <option value="Tesla">Tesla</option>
+                <option value="Toyota">Toyota</option>
+                <option value="Vinfast">Vinfast</option>
+                <option value="Volkswagen">Volkswagen</option>
+                <option value="Volvo">Volvo</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Model <span style="font-size:11px;color:var(--gray-400);font-weight:400;">— populates after make</span></label>
+            <select id="bModel" onchange="updateBuyerMatchCount()">
+              <option value="">Select model</option>
+            </select>
+          </div>
+        </div>
+
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Maximum Mileage</label>
+            <select id="bMileage" onchange="updateBuyerMatchCount()">
+              <option>Under 30,000 miles</option>
+              <option>Under 50,000 miles</option>
+              <option selected>Under 75,000 miles</option>
+              <option>Under 100,000 miles</option>
+              <option>Under 125,000 miles</option>
+              <option>125,000+ miles OK</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Maximum OTD Budget</label>
+            <select id="bBudget" onchange="updateBuyerMatchCount()">
+              <option>Under $10,000</option>
+              <option>Under $15,000</option>
+              <option selected>Under $20,000</option>
+              <option>Under $25,000</option>
+              <option>Under $30,000</option>
+              <option>Under $40,000</option>
+              <option>Under $50,000</option>
+              <option>$50,000+</option>
+            </select>
+          </div>
+        </div>
+
+
+      </div>
+
+      <!-- Purchase Context -->
+      <div class="form-section">
+        <div class="form-section-title">📍 Purchase Context</div>
+        <div class="form-row thirds">
+          <div class="form-group">
+            <label>Your Zip Code</label>
+            <input type="text" placeholder="e.g. 90210" maxlength="5">
+          </div>
+          <div class="form-group">
+            <label>Search Radius</label>
+            <select>
+              <option>25 miles</option>
+              <option>50 miles</option>
+              <option selected>75 miles</option>
+              <option>100 miles</option>
+              <option>150 miles</option>
+              <option>Statewide</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Timeline to Buy</label>
+            <select>
+              <option>ASAP</option>
+              <option selected>Within 30 days</option>
+              <option>Within 60 days</option>
+              <option>Just Browsing</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Financing</label>
+            <select>
+              <option>Yes — I need financing</option>
+              <option>Yes — I'm pre-approved</option>
+              <option selected>No — Cash buyer</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Have a Trade-In?</label>
+            <select>
+              <option>Yes</option>
+              <option selected>No</option>
+              <option>Maybe</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- My Story -->
+      <div class="form-section">
+        <div class="form-section-title">💬 My Story</div>
+        <div class="form-group">
+          <label>Tell sellers about yourself and what matters most (optional)</label>
+          <textarea id="storyTextarea" maxlength="300" oninput="document.getElementById('storyCount').textContent=this.value.length" placeholder="e.g. First time buyer — reliability is my top priority. I commute about 35 miles daily and need good fuel economy. Open to any trim level within my budget."></textarea>
+          <div class="char-count"><span id="storyCount">0</span> / 300</div>
+        </div>
+      </div>
+
+      <!-- Contact -->
+      <div class="form-section">
+        <div class="form-section-title">🔒 Your Contact Info — Protected Until You Connect</div>
+        <div class="form-row thirds">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" placeholder="Your name">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" placeholder="you@email.com">
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" placeholder="(555) 000-0000">
+          </div>
+        </div>
+        <div class="alert alert-blue">🔒 OTD4Me is a free advertising platform. Your contact info is never shared with sellers until you choose to connect. We are not a party to any vehicle transaction.</div>
+      </div>
+
+      <div class="form-footer">
+        <div class="form-note">Free to post · By continuing you agree to our <a href="#" style="color:var(--blue)">Terms of Use</a> and <a href="#" style="color:var(--blue)">Privacy Policy</a></div>
+        <button class="btn btn-primary btn-lg" onclick="showView('buyer-dashboard')">Post My Request →</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- VIEW: BUYER DASHBOARD                -->
+<!-- ════════════════════════════════════ -->
+<div id="view-buyer-dashboard" class="view">
+  <div class="app-container">
+    <div class="page-header">
+      <div>
+        <div class="page-title">My Dashboard</div>
+        <div style="font-size:13px;color:var(--gray-400);margin-top:4px;">Welcome back · 3 seller responses · Posted 2 days ago</div>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="showView('landing')">← Home</button>
+    </div>
+
+    <!-- UNIFIED DASHBOARD TABS -->
+    <div class="ud-tabs">
+      <button class="ud-tab active" id="udTab-request" onclick="showUDTab('request')">📋 My Request</button>
+      <button class="ud-tab" id="udTab-matches" onclick="showUDTab('matches')">🏁 Seller Matches <span class="notif-badge" style="background:var(--green);color:white;padding:2px 7px;border-radius:10px;font-size:11px;margin-left:6px;">3</span></button>
+      <button class="ud-tab" id="udTab-seller" onclick="showUDTab('seller')">🏢 Seller Dashboard</button>
+    </div>
+
+    <!-- ═══ TAB: MY REQUEST ═══ -->
+    <div id="udPanel-request" class="ud-panel">
+      <div class="dashboard-grid">
+        <div class="sidebar-card">
+          <div class="sidebar-label">My Request</div>
+          <div class="request-summary-item"><span class="rsi-label">Make</span><span class="rsi-value">Toyota, Honda</span></div>
+          <div class="request-summary-item"><span class="rsi-label">Years</span><span class="rsi-value">2017 – 2023</span></div>
+          <div class="request-summary-item"><span class="rsi-label">Max Miles</span><span class="rsi-value">75,000</span></div>
+          <div class="request-summary-item"><span class="rsi-label">OTD Budget</span><span class="rsi-value">Under $20,000</span></div>
+          <div class="request-summary-item"><span class="rsi-label">Location</span><span class="rsi-value">75mi of 92590</span></div>
+          <div class="request-summary-item"><span class="rsi-label">Financing</span><span class="rsi-value">Cash buyer</span></div>
+          <div class="request-summary-item"><span class="rsi-label">Sellers</span><span class="rsi-value">Dealer + Private</span></div>
+          <div class="divider"></div>
+          <div class="sidebar-label">Status</div>
+          <div style="font-size:28px;font-family:'Playfair Display',serif;font-weight:700;color:var(--navy);text-align:center;padding:10px 0;">3</div>
+          <div style="font-size:12px;color:var(--gray-400);text-align:center;margin-bottom:12px;">seller responses</div>
+          <button class="btn btn-outline btn-sm" style="width:100%;margin-bottom:8px;" onclick="showView('buyer-form')">✏️ Edit My Request</button>
+          <button class="btn btn-outline btn-sm" style="width:100%;" onclick="showView('messaging')">💬 My Messages</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div style="background:var(--gray-50);border:1px solid var(--border);border-radius:12px;padding:20px;">
+            <div style="font-size:14px;font-weight:600;color:var(--navy);margin-bottom:8px;">Your request is active</div>
+            <div style="font-size:13px;color:var(--gray-600);line-height:1.6;">Sellers can see your request and respond with their best OTD price. You stay anonymous until you choose to connect. Your request expires in <strong>28 days</strong> — you will be notified to renew.</div>
+          </div>
+          <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:12px;padding:20px;">
+            <div style="font-size:14px;font-weight:600;color:var(--green);margin-bottom:8px;">⚡ 3 New Responses</div>
+            <div style="font-size:13px;color:var(--gray-600);margin-bottom:12px;">You have 3 seller responses waiting. View them ranked by best match in the Seller Matches tab.</div>
+            <button class="btn btn-primary btn-sm" onclick="showUDTab('matches')">View Seller Matches →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ TAB: SELLER MATCHES ═══ -->
+    <div id="udPanel-matches" class="ud-panel" style="display:none;">
+      <div style="font-size:13px;color:var(--gray-600);margin-bottom:20px;">Responses ranked by best match. AI has scored each against your exact criteria.</div>
+
+      <div class="match-cards">
+
+        <!-- MATCH CARD 1 -->
+        <div class="match-card match-card-top">
+          <div class="mc-rank-bar">
+            <span class="mc-rank-label">⭐ #1 Best Match</span>
+            <span class="mc-score score-high">94% Match</span>
+          </div>
+          <div class="mc-header">
+            <div class="mc-avatar">SC</div>
+            <div>
+              <div class="mc-seller-name">SoCal Auto Center <span class="verified-badge">✓ Verified Dealer</span></div>
+              <div class="mc-location">Temecula, CA · License #DA12345</div>
+            </div>
+          </div>
+          <div class="mc-vehicle">2021 Honda Accord EX · 38,200 mi</div>
+          <div class="mc-otd">$19,450 <span class="mc-otd-label">Total OTD</span></div>
+          <div class="mc-flags">
+            <span class="flag flag-good">✓ Within budget</span>
+            <span class="flag flag-good">✓ Under mileage limit</span>
+            <span class="flag flag-good">✓ No accidents</span>
+            <span class="flag flag-good">✓ Full service records</span>
+            <span class="flag flag-good">✓ 1 owner</span>
+          </div>
+          <div class="mc-rows">
+            <div class="mc-row"><span class="mc-row-label">OTD Breakdown</span><span class="mc-row-val">$17,500 + $85 doc + $50 smog + $1,356 tax + $459 DMV</span></div>
+            <div class="mc-row"><span class="mc-row-label">Warranty</span><span class="mc-row-val good-val">30-day dealer warranty</span></div>
+            <div class="mc-row"><span class="mc-row-label">Financing</span><span class="mc-row-val good-val">Available</span></div>
+            <div class="mc-row"><span class="mc-row-label">Trade-In</span><span class="mc-row-val">Accepted</span></div>
+          </div>
+          <div class="mc-ai">🤖 <strong>AI Summary:</strong> Strongest match. Hits all your criteria — well under mileage limit, clean title, one owner, and OTD leaves $550 in your budget. Full service history. Recommend connecting.</div>
+          <div class="mc-pitch">"Local lease return, non-smoker, all service records at Honda dealership. This OTD price is honored for 7 days."</div>
+          <div class="mc-actions">
+            <button class="btn btn-green" onclick="showView('messaging')">✅ Connect with Seller</button>
+            <button class="btn btn-outline btn-sm">📷 Photos (12)</button>
+          </div>
+        </div>
+
+        <!-- MATCH CARD 2 -->
+        <div class="match-card">
+          <div class="mc-rank-bar">
+            <span class="mc-rank-label">#2</span>
+            <span class="mc-score score-mid">71% Match</span>
+          </div>
+          <div class="mc-header">
+            <div class="mc-avatar">MR</div>
+            <div>
+              <div class="mc-seller-name">Mike R. <span class="private-badge">👤 Private Seller</span></div>
+              <div class="mc-location">Murrieta, CA · 18 miles away</div>
+            </div>
+          </div>
+          <div class="mc-vehicle">2019 Toyota Camry LE · 68,900 mi</div>
+          <div class="mc-otd">$17,200 <span class="mc-otd-label">Asking Price</span></div>
+          <div class="mc-flags">
+            <span class="flag flag-good">✓ Within budget</span>
+            <span class="flag flag-warn">⚠ Near mileage limit (68.9k)</span>
+            <span class="flag flag-good">✓ No accidents</span>
+            <span class="flag flag-bad">✗ No service records</span>
+          </div>
+          <div class="mc-rows">
+            <div class="mc-row"><span class="mc-row-label">Title</span><span class="mc-row-val good-val">Clean title</span></div>
+            <div class="mc-row"><span class="mc-row-label">Lien</span><span class="mc-row-val good-val">No lien</span></div>
+            <div class="mc-row"><span class="mc-row-label">Inspection</span><span class="mc-row-val">Allowed at buyer cost</span></div>
+            <div class="mc-row"><span class="mc-row-label">Smog</span><span class="mc-row-val">Buyer pays</span></div>
+          </div>
+          <div class="mc-ai">🤖 <strong>AI Summary:</strong> Good price on a reliable Camry but mileage is close to your 75k limit. No service records — a pre-purchase inspection is strongly advised before connecting.</div>
+          <div class="mc-pitch">"Bought this as a second vehicle, just do not use it anymore. Very well maintained. Willing to let a mechanic look at it."</div>
+          <div class="mc-actions">
+            <button class="btn btn-blue" onclick="showView('messaging')">Connect with Seller</button>
+            <button class="btn btn-outline btn-sm">📷 Photos (8)</button>
+          </div>
+        </div>
+
+        <!-- MATCH CARD 3 -->
+        <div class="match-card">
+          <div class="mc-rank-bar">
+            <span class="mc-rank-label">#3</span>
+            <span class="mc-score score-low">52% Match</span>
+          </div>
+          <div class="mc-header">
+            <div class="mc-avatar">VP</div>
+            <div>
+              <div class="mc-seller-name">Valley Premier Motors <span class="verified-badge">✓ Verified Dealer</span></div>
+              <div class="mc-location">Escondido, CA · License #DA67890</div>
+            </div>
+          </div>
+          <div class="mc-vehicle">2018 Nissan Altima SR · 82,400 mi</div>
+          <div class="mc-otd" style="color:var(--red);">$21,890 <span class="mc-otd-label" style="color:var(--gray-400);">Total OTD · Over budget</span></div>
+          <div class="mc-flags">
+            <span class="flag flag-bad">✗ Over budget by $1,890</span>
+            <span class="flag flag-bad">✗ Exceeds mileage limit</span>
+            <span class="flag flag-warn">⚠ 1 minor accident</span>
+            <span class="flag flag-good">✓ Backup camera</span>
+          </div>
+          <div class="mc-rows">
+            <div class="mc-row"><span class="mc-row-label">Previous Owners</span><span class="mc-row-val warn-val">3 owners</span></div>
+            <div class="mc-row"><span class="mc-row-label">Warranty</span><span class="mc-row-val good-val">60-day powertrain</span></div>
+            <div class="mc-row"><span class="mc-row-label">Financing</span><span class="mc-row-val good-val">Available</span></div>
+          </div>
+          <div class="mc-ai">🤖 <strong>AI Summary:</strong> Misses two core criteria — mileage is 7,400 over your limit and OTD exceeds your budget. Prior accident and 3 owners add risk. The other offers are stronger fits.</div>
+          <div class="mc-actions">
+            <button class="btn btn-outline btn-sm" onclick="showView('messaging')">Connect Anyway</button>
+            <button class="btn btn-outline btn-sm">📷 Photos (6)</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ═══ TAB: SELLER DASHBOARD ═══ -->
+    <div id="udPanel-seller" class="ud-panel" style="display:none;">
+
+      <!-- Dealer upgrade prompt (shown for non-dealers) -->
+      <div id="dealerUpgradePrompt" class="dealer-upgrade-banner">
+        <div class="dub-icon">🏢</div>
+        <div class="dub-content">
+          <div class="dub-title">Are you a licensed dealer?</div>
+          <div class="dub-desc">Apply for a Verified Dealer account to unlock inventory management, CRM sync, bulk listing tools, and a verification badge visible to all buyers.</div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="showView('dealer-signup')">Apply for Dealer Account →</button>
+      </div>
+
+      <!-- SELLER STATS BAR -->
+      <div class="seller-stats-bar" style="margin-top:0;">
+        <div class="seller-stat-box">
+          <div class="ssb-val" id="stat-inventory">5</div>
+          <div class="ssb-label">Vehicles Listed</div>
+        </div>
+        <div class="seller-stat-box highlight">
+          <div class="ssb-val" id="stat-matches">23</div>
+          <div class="ssb-label">Active Buyer Matches</div>
+        </div>
+        <div class="seller-stat-box">
+          <div class="ssb-val" id="stat-responses">3</div>
+          <div class="ssb-label">Responses Sent</div>
+        </div>
+        <div class="seller-stat-box">
+          <div class="ssb-val" id="stat-messages">2</div>
+          <div class="ssb-label">Active Conversations</div>
+        </div>
+      </div>
+
+      <div class="tabs" id="sellerTabsInner" style="margin-top:20px;">
+        <div class="tab active" onclick="showSellerTab('buyer-requests')">Buyer Requests <span class="notif-badge">8</span></div>
+        <div class="tab" onclick="showSellerTab('inventory')">My Inventory <span class="notif-badge" style="background:var(--blue)">5</span></div>
+        <div class="tab" onclick="showSellerTab('messages')">Messages <span class="notif-badge">2</span></div>
+      </div>
+
+      <!-- TAB: BUYER REQUESTS -->
+      <div id="tab-buyer-requests" class="seller-tab-content">
+        <div style="font-size:13px;color:var(--gray-600);margin-bottom:16px;">Your inventory is automatically matched to these buyer requests. One-click to respond with a pre-filled form.</div>
+        <div class="buyer-request-row matched">
+          <div class="brr-left">
+            <div class="brr-title">Toyota / Honda Sedan or SUV</div>
+            <div class="brr-details">2017–2023 · Temecula area (75mi) · Cash buyer · ASAP</div>
+          </div>
+          <div class="brr-center">
+            <div class="brr-stat"><div class="brr-stat-val text-green">$20,000</div><div class="brr-stat-label">OTD Budget</div></div>
+            <div class="brr-stat"><div class="brr-stat-val">75k mi</div><div class="brr-stat-label">Max Miles</div></div>
+            <div class="brr-stat"><div class="brr-stat-val text-green">2 matches</div><div class="brr-stat-label">Your Inventory</div></div>
+          </div>
+          <button class="btn btn-green btn-sm" onclick="showView('seller-response-form')">⚡ Quick Respond →</button>
+        </div>
+        <div class="buyer-request-row">
+          <div class="brr-left">
+            <div class="brr-title">Honda CR-V or Toyota RAV4</div>
+            <div class="brr-details">2018–2022 · Murrieta area · Pre-approved financing · 30 days</div>
+          </div>
+          <div class="brr-center">
+            <div class="brr-stat"><div class="brr-stat-val text-green">$27,000</div><div class="brr-stat-label">OTD Budget</div></div>
+            <div class="brr-stat"><div class="brr-stat-val">60k mi</div><div class="brr-stat-label">Max Miles</div></div>
+            <div class="brr-stat"><div class="brr-stat-val text-green">1 match</div><div class="brr-stat-label">Your Inventory</div></div>
+          </div>
+          <button class="btn btn-blue btn-sm" onclick="showView('seller-response-form')">Respond →</button>
+        </div>
+      </div>
+
+      <!-- TAB: MY INVENTORY -->
+      <div id="tab-inventory" class="seller-tab-content" style="display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div style="font-size:13px;color:var(--gray-600);">5 active listings · 23 total buyer matches across inventory</div>
+          <button class="btn btn-primary btn-sm">+ Add Vehicle</button>
+        </div>
+        <div class="inventory-grid" id="inventoryGrid"></div>
+      </div>
+
+      <!-- TAB: MESSAGES -->
+      <div id="tab-messages" class="seller-tab-content" style="display:none;">
+        <div style="font-size:13px;color:var(--gray-600);margin-bottom:16px;">2 active conversations</div>
+        <div class="msg-preview-row" onclick="showView('messaging')">
+          <div class="mpr-avatar">JM</div>
+          <div class="mpr-content">
+            <div class="mpr-name">James M. <span class="mpr-vehicle">re: 2021 Honda Accord EX</span></div>
+            <div class="mpr-preview">Thanks for the quick response. Can I come in Saturday morning?</div>
+          </div>
+          <div class="mpr-meta"><div class="mpr-time">2h ago</div><div class="unread-dot"></div></div>
+        </div>
+        <div class="msg-preview-row" onclick="showView('messaging')">
+          <div class="mpr-avatar">SK</div>
+          <div class="mpr-content">
+            <div class="mpr-name">Sarah K. <span class="mpr-vehicle">re: 2020 Toyota RAV4</span></div>
+            <div class="mpr-preview">Is the OTD price still valid this week?</div>
+          </div>
+          <div class="mpr-meta"><div class="mpr-time">1d ago</div></div>
+        </div>
+      </div>
+
+    </div><!-- end udPanel-seller -->
+
+  </div>
+</div>
+
+<!-- VIEW: MESSAGING                      -->
+<!-- ════════════════════════════════════ -->
+<div id="view-messaging" class="view">
+  <div class="app-container">
+    <div class="page-header">
+      <div class="page-title">Messages</div>
+      <button class="btn btn-outline btn-sm" onclick="showView('buyer-dashboard')">← My Dashboard</button>
+    </div>
+
+    <div class="messaging-layout">
+      <div class="msg-sidebar">
+        <div class="msg-sidebar-header">Conversations</div>
+        <div class="msg-thread active">
+          <span class="msg-thread-time">2h ago</span>
+          <div class="msg-thread-name">SoCal Auto Center ✓</div>
+          <div class="msg-thread-preview">Can you hold the price until Friday?</div>
+        </div>
+        <div class="msg-thread">
+          <span class="msg-thread-time">1d ago</span>
+          <div class="msg-thread-name">Mike R. (Private)</div>
+          <div class="msg-thread-preview">Yes the vehicle is still available</div>
+        </div>
+      </div>
+
+      <div class="msg-main">
+        <div class="msg-header">
+          <div>
+            <div class="msg-header-title">SoCal Auto Center <span class="verified-badge">✓ Verified</span></div>
+            <div class="msg-header-sub">Temecula, CA · Responding within 1 hour</div>
+          </div>
+          <button class="btn btn-outline btn-sm">View Full Offer</button>
+        </div>
+
+        <div class="msg-vehicle-ref">
+          <div class="mvr-label">📋 Agreed Terms on File</div>
+          <div class="mvr-details">2021 Honda Accord EX · OTD: <strong class="text-green">$19,450</strong> · Valid 7 days</div>
+        </div>
+
+        <div class="msg-body">
+          <div class="msg-bubble incoming">
+            Hi! Thanks for connecting on the 2021 Accord. I'd love to answer any questions you have. We can schedule a test drive at your convenience — we're open 7 days a week.
+            <div class="msg-time">Yesterday 2:14 PM</div>
+          </div>
+          <div class="msg-bubble outgoing">
+            Thanks! The vehicle looks great. Is the $19,450 OTD price firm or is there any flexibility?
+            <div class="msg-time">Yesterday 3:02 PM</div>
+          </div>
+          <div class="msg-bubble incoming">
+            The price is very competitive for this mileage and condition, but I can talk to my manager about including a free oil change and detail. Can you come in this weekend?
+            <div class="msg-time">Yesterday 3:45 PM</div>
+          </div>
+          <div class="msg-bubble outgoing">
+            That works! Can you hold the price until Friday so I can arrange time off?
+            <div class="msg-time">2 hours ago</div>
+          </div>
+        </div>
+
+        <div class="msg-input-area">
+          <input type="text" placeholder="Type your message... (your contact info is visible to this seller)">
+          <button class="btn btn-primary">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- VIEW: SELLER DASHBOARD               -->
+<!-- ════════════════════════════════════ -->
+<div id="view-seller-dashboard" class="view">
+  <div class="app-container">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Seller Dashboard</div>
+        <div style="font-size:13px;color:var(--gray-400);margin-top:4px;">Welcome back, SoCal Auto Center <span class="verified-badge">✓ Verified Dealer</span></div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-outline btn-sm" onclick="showView('landing')">← Home</button>
+        <button class="btn btn-primary btn-sm" onclick="showSellerTab('inventory'); showView('seller-dashboard')">+ Add Vehicle</button>
+      </div>
+    </div>
+
+    <!-- SELLER STATS BAR -->
+    <div class="seller-stats-bar">
+      <div class="seller-stat-box">
+        <div class="ssb-val" id="stat-inventory">5</div>
+        <div class="ssb-label">Vehicles Listed</div>
+      </div>
+      <div class="seller-stat-box highlight">
+        <div class="ssb-val" id="stat-matches">23</div>
+        <div class="ssb-label">Active Buyer Matches</div>
+      </div>
+      <div class="seller-stat-box">
+        <div class="ssb-val" id="stat-responses">3</div>
+        <div class="ssb-label">Responses Sent</div>
+      </div>
+      <div class="seller-stat-box">
+        <div class="ssb-val" id="stat-messages">2</div>
+        <div class="ssb-label">Active Conversations</div>
+      </div>
+    </div>
+
+    <div class="tabs" id="sellerTabs">
+      <div class="tab active" onclick="showSellerTab('buyer-requests')">Buyer Requests <span class="notif-badge">8</span></div>
+      <div class="tab" onclick="showSellerTab('inventory')">My Inventory <span class="notif-badge" style="background:var(--blue)">5</span></div>
+      <div class="tab" onclick="showSellerTab('messages')">Messages <span class="notif-badge">2</span></div>
+    </div>
+
+    <!-- TAB: BUYER REQUESTS -->
+    <div id="tab-buyer-requests" class="seller-tab-content">
+      <div style="font-size:13px;color:var(--gray-600);margin-bottom:16px;">Your inventory is automatically matched to these buyer requests. One-click to respond with a pre-filled form.</div>
+
+      <div class="buyer-request-row matched">
+        <div class="brr-left">
+          <div class="brr-title">Toyota / Honda Sedan or SUV</div>
+          <div class="brr-details">2017–2023 · Open to suggestion · Temecula area (75mi) · Cash buyer · ASAP</div>
+        </div>
+        <div class="brr-center">
+          <div class="brr-stat"><div class="brr-stat-val text-green">$20,000</div><div class="brr-stat-label">OTD Budget</div></div>
+          <div class="brr-stat"><div class="brr-stat-val">75k mi</div><div class="brr-stat-label">Max Miles</div></div>
+          <div class="brr-stat"><div class="brr-stat-val text-green">2 matches</div><div class="brr-stat-label">Your Inventory</div></div>
+        </div>
+        <button class="btn btn-green btn-sm" onclick="showView('seller-response-form')">⚡ Quick Respond →</button>
+      </div>
+
+      <div class="buyer-request-row matched">
+        <div class="brr-left">
+          <div class="brr-title">Family SUV — 3rd Row Required</div>
+          <div class="brr-details">2019–2024 · Highlander / Pilot / Similar · Murrieta area · Within 30 days</div>
+        </div>
+        <div class="brr-center">
+          <div class="brr-stat"><div class="brr-stat-val text-green">$35,000</div><div class="brr-stat-label">OTD Budget</div></div>
+          <div class="brr-stat"><div class="brr-stat-val">60k mi</div><div class="brr-stat-label">Max Miles</div></div>
+          <div class="brr-stat"><div class="brr-stat-val text-green">1 match</div><div class="brr-stat-label">Your Inventory</div></div>
+        </div>
+        <button class="btn btn-green btn-sm" onclick="showView('seller-response-form')">⚡ Quick Respond →</button>
+      </div>
+
+      <div class="buyer-request-row">
+        <div class="brr-left">
+          <div class="brr-title">Ford F-150 Truck — Work Truck</div>
+          <div class="brr-details">2018–2022 · Crew or Extended · Escondido area (50mi) · Within 30 days</div>
+        </div>
+        <div class="brr-center">
+          <div class="brr-stat"><div class="brr-stat-val">$38,000</div><div class="brr-stat-label">OTD Budget</div></div>
+          <div class="brr-stat"><div class="brr-stat-val">70k mi</div><div class="brr-stat-label">Max Miles</div></div>
+          <div class="brr-stat"><div class="brr-stat-val" style="color:var(--gray-400)">No match</div><div class="brr-stat-label">Your Inventory</div></div>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="showView('seller-response-form')">Respond Anyway →</button>
+      </div>
+
+      <div class="buyer-request-row matched">
+        <div class="brr-left">
+          <div class="brr-title">Luxury Sedan — BMW or Mercedes</div>
+          <div class="brr-details">2020–2023 · CPO Preferred · Carlsbad area (100mi) · ASAP</div>
+        </div>
+        <div class="brr-center">
+          <div class="brr-stat"><div class="brr-stat-val text-green">$50,000</div><div class="brr-stat-label">OTD Budget</div></div>
+          <div class="brr-stat"><div class="brr-stat-val">50k mi</div><div class="brr-stat-label">Max Miles</div></div>
+          <div class="brr-stat"><div class="brr-stat-val text-green">1 match</div><div class="brr-stat-label">Your Inventory</div></div>
+        </div>
+        <button class="btn btn-green btn-sm" onclick="showView('seller-response-form')">⚡ Quick Respond →</button>
+      </div>
+    </div>
+
+    <!-- TAB: INVENTORY -->
+    <div id="tab-inventory" class="seller-tab-content" style="display:none">
+
+      <!-- ADD VEHICLE FORM -->
+      <div class="inventory-add-panel" id="addVehiclePanel" style="display:none">
+        <div class="inv-add-header">
+          <div style="font-weight:700;font-size:15px;color:var(--navy);">+ Add Vehicle to Inventory</div>
+          <button class="btn btn-outline btn-sm" onclick="toggleAddPanel()">Cancel</button>
+        </div>
+
+        <!-- Live Buyer Match Counter -->
+        <div class="match-counter-bar" id="matchCounterBar">
+          <div class="mcb-icon">🎯</div>
+          <div class="mcb-text">
+            <div class="mcb-count" id="liveMatchCount">—</div>
+            <div class="mcb-label">buyer requests currently match this vehicle</div>
+          </div>
+          <div class="mcb-sub" id="liveMatchSub">Fill in vehicle details to see matches</div>
+        </div>
+
+        <div class="inv-add-form">
+          <div class="form-row thirds">
+            <div class="form-group">
+              <label>Year</label>
+              <select onchange="updateSellerMatchCount()">
+                <option value="">Select</option>
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+                <option value="2021" selected>2021</option>
+                <option value="2020">2020</option>
+                <option value="2019">2019</option>
+                <option value="2018">2018</option>
+                <option value="2017">2017</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Make</label>
+              <select id="invMake" onchange="populateModels('invMake','invModel'); updateSellerMatchCount()">
+                <option value="">Select make</option>
+                <option value="Acura">Acura</option>
+                <option value="Alfa Romeo">Alfa Romeo</option>
+                <option value="Audi">Audi</option>
+                <option value="BMW">BMW</option>
+                <option value="Buick">Buick</option>
+                <option value="Cadillac">Cadillac</option>
+                <option value="Chevrolet">Chevrolet</option>
+                <option value="Chrysler">Chrysler</option>
+                <option value="Dodge">Dodge</option>
+                <option value="Fiat">Fiat</option>
+                <option value="Ford">Ford</option>
+                <option value="GMC">GMC</option>
+                <option value="Genesis">Genesis</option>
+                <option value="Honda">Honda</option>
+                <option value="Hyundai">Hyundai</option>
+                <option value="Infiniti">Infiniti</option>
+                <option value="Jaguar">Jaguar</option>
+                <option value="Jeep">Jeep</option>
+                <option value="Kia">Kia</option>
+                <option value="Land Rover">Land Rover</option>
+                <option value="Lexus">Lexus</option>
+                <option value="Lincoln">Lincoln</option>
+                <option value="Lucid">Lucid</option>
+                <option value="MINI">MINI</option>
+                <option value="Mazda">Mazda</option>
+                <option value="Mercedes-Benz">Mercedes-Benz</option>
+                <option value="Mitsubishi">Mitsubishi</option>
+                <option value="Nissan">Nissan</option>
+                <option value="Polestar">Polestar</option>
+                <option value="Porsche">Porsche</option>
+                <option value="RAM">RAM</option>
+                <option value="Rivian">Rivian</option>
+                <option value="Subaru">Subaru</option>
+                <option value="Tesla">Tesla</option>
+                <option value="Toyota">Toyota</option>
+                <option value="Vinfast">Vinfast</option>
+                <option value="Volkswagen">Volkswagen</option>
+                <option value="Volvo">Volvo</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Model</label>
+              <select id="invModel" onchange="updateSellerMatchCount()">
+                <option value="">Select model</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Trim</label>
+              <input type="text" placeholder="e.g. EX, Sport, LX" oninput="updateSellerMatchCount()">
+            </div>
+            <div class="form-group">
+              <label>Mileage</label>
+              <input type="number" placeholder="e.g. 38200" value="38200" oninput="updateSellerMatchCount()">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>OTD Price</label>
+              <input type="number" placeholder="e.g. 19450" value="19450" oninput="updateSellerMatchCount()">
+            </div>
+            <div class="form-group">
+              <label>Body Style</label>
+              <select onchange="updateSellerMatchCount()">
+                <option value="Sedan" selected>Sedan</option>
+                <option value="SUV">SUV</option>
+                <option value="Truck">Truck</option>
+                <option value="Coupe">Coupe</option>
+                <option value="Hatchback">Hatchback</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>VIN</label>
+              <input type="text" placeholder="17-character VIN">
+            </div>
+            <div class="form-group">
+              <label>Accident History</label>
+              <select>
+                <option>No accidents</option>
+                <option>1 minor accident</option>
+                <option>1 major accident</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label>Known Issues / Disclosures</label>
+              <textarea placeholder="Enter 'None' if none">None known.</textarea>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px;">
+            <button class="btn btn-outline btn-sm" onclick="toggleAddPanel()">Cancel</button>
+            <button class="btn btn-primary" onclick="addToInventory()">Save to Inventory →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- INVENTORY LIST -->
+      <div id="inventoryList"></div>
+
+      <button class="btn btn-blue" style="margin-top:16px;width:100%" onclick="toggleAddPanel()">+ Add Another Vehicle — Free</button>
+    </div>
+
+    <!-- TAB: MESSAGES -->
+    <div id="tab-messages" class="seller-tab-content" style="display:none">
+      <div style="font-size:13px;color:var(--gray-600);margin-bottom:16px;">Active buyer conversations. Contact info is visible once a buyer connects with you.</div>
+      <div class="buyer-request-row">
+        <div class="brr-left">
+          <div class="brr-title">Jason M. — 2021 Honda Accord EX</div>
+          <div class="brr-details">Last message: "Can you hold the price until Friday?" · 2 hours ago</div>
+        </div>
+        <div class="brr-center">
+          <div class="brr-stat"><div class="brr-stat-val text-green">$19,450</div><div class="brr-stat-label">Agreed OTD</div></div>
+        </div>
+        <button class="btn btn-blue btn-sm" onclick="showView('messaging')">Open Chat →</button>
+      </div>
+      <div class="buyer-request-row">
+        <div class="brr-left">
+          <div class="brr-title">Sandra R. — 2022 Honda Pilot EX-L</div>
+          <div class="brr-details">Last message: "Does it have the 3rd row folding feature?" · 1 day ago</div>
+        </div>
+        <div class="brr-center">
+          <div class="brr-stat"><div class="brr-stat-val text-green">$34,200</div><div class="brr-stat-label">Agreed OTD</div></div>
+        </div>
+        <button class="btn btn-blue btn-sm" onclick="showView('messaging')">Open Chat →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- VIEW: SELLER RESPONSE FORM           -->
+<!-- ════════════════════════════════════ -->
+<div id="view-seller-response-form" class="view">
+  <div class="app-container">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Submit Your Response</div>
+        <div style="font-size:13px;color:var(--gray-400);margin-top:4px;">Responding to: Toyota/Honda Sedan or SUV · Budget $20,000 OTD</div>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="showView('seller-dashboard')">← Back</button>
+    </div>
+
+    <div class="form-card">
+
+      <!-- SELLER TYPE TOGGLE -->
+      <div class="form-section">
+        <div class="form-section-title">👤 Who Are You?</div>
+        <div class="seller-type-toggle">
+          <button class="stt-btn active" id="btnDealer" onclick="switchSellerType('dealer')">
+            🏢 Licensed Dealer
+          </button>
+          <button class="stt-btn" id="btnPrivate" onclick="switchSellerType('private')">
+            👤 Private Seller
+          </button>
+        </div>
+        <div id="sellerTypeHint" style="font-size:13px;color:var(--gray-400);margin-top:10px;">
+          Showing the dealer form — includes dealership info, financing, and warranty fields.
+        </div>
+      </div>
+
+      <!-- ═══ DEALER-ONLY SECTION ═══ -->
+      <div id="dealerSection" class="form-section">
+        <div class="form-section-title">🏢 Dealership Info</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Dealership Name</label>
+            <input type="text" value="SoCal Auto Center">
+          </div>
+          <div class="form-group">
+            <label>CA Dealer License #</label>
+            <input type="text" value="DA12345" placeholder="e.g. DA12345">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>City / Location</label>
+            <input type="text" value="Temecula, CA">
+          </div>
+          <div class="form-group">
+            <label>Financing Available?</label>
+            <select>
+              <option>Yes — we offer financing</option>
+              <option>No — cash or buyer-arranged only</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>CPO / Warranty Offered?</label>
+            <select>
+              <option>No warranty</option>
+              <option>Certified Pre-Owned (CPO)</option>
+              <option>Dealer warranty included</option>
+              <option>Powertrain warranty only</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Trade-In Accepted?</label>
+            <select>
+              <option>Yes — we accept trade-ins</option>
+              <option>No</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ PRIVATE SELLER-ONLY SECTION ═══ -->
+      <div id="privateSection" class="form-section" style="display:none">
+        <div class="form-section-title">👤 About You</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Your First Name</label>
+            <input type="text" placeholder="e.g. Michael">
+          </div>
+          <div class="form-group">
+            <label>General Location</label>
+            <input type="text" placeholder="e.g. Temecula, CA">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Are You the Registered Owner?</label>
+            <select>
+              <option>Yes — I am the registered owner</option>
+              <option>No — selling on behalf of owner</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Is There a Lien on the Vehicle?</label>
+            <select>
+              <option>No lien — clear title</option>
+              <option>Yes — lien will be paid off at sale</option>
+              <option>Yes — buyer must assume lien</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Title Status</label>
+            <select>
+              <option>Clean title</option>
+              <option>Salvage title</option>
+              <option>Rebuilt / Reconstructed title</option>
+              <option>Lost title — can obtain duplicate</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Who Pays for Smog?</label>
+            <select>
+              <option>I will provide current smog cert</option>
+              <option>Buyer pays for smog</option>
+              <option>As-is — no smog provided</option>
+              <option>Vehicle is smog exempt</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Pre-Purchase Inspection Allowed?</label>
+            <select>
+              <option>Yes — buyer may inspect at their cost</option>
+              <option>No</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Reason for Selling</label>
+            <select>
+              <option>Upgrading to a newer vehicle</option>
+              <option>No longer need it</option>
+              <option>Relocating</option>
+              <option>Financial reasons</option>
+              <option>Prefer not to say</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ VEHICLE DETAILS (shared by both) ═══ -->
+      <div class="form-section">
+        <div class="form-section-title">🚗 Vehicle Details</div>
+        <div class="form-row thirds">
+          <div class="form-group">
+            <label>Year</label>
+            <select>
+              <option>2024</option><option>2023</option><option>2022</option>
+              <option selected>2021</option><option>2020</option><option>2019</option>
+              <option>2018</option><option>2017</option><option>2016</option>
+              <option>2015</option><option>2014</option><option>2013</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Make</label>
+            <select id="respMake" onchange="populateModels('respMake','respModel')">
+              <option value="">Select make</option>
+                            <option value="Acura">Acura</option>
+              <option value="Alfa Romeo">Alfa Romeo</option>
+              <option value="Audi">Audi</option>
+              <option value="BMW">BMW</option>
+              <option value="Buick">Buick</option>
+              <option value="Cadillac">Cadillac</option>
+              <option value="Chevrolet">Chevrolet</option>
+              <option value="Chrysler">Chrysler</option>
+              <option value="Dodge">Dodge</option>
+              <option value="Fiat">Fiat</option>
+              <option value="Ford">Ford</option>
+              <option value="GMC">GMC</option>
+              <option value="Genesis">Genesis</option>
+              <option value="Honda">Honda</option>
+              <option value="Hyundai">Hyundai</option>
+              <option value="Infiniti">Infiniti</option>
+              <option value="Jaguar">Jaguar</option>
+              <option value="Jeep">Jeep</option>
+              <option value="Kia">Kia</option>
+              <option value="Land Rover">Land Rover</option>
+              <option value="Lexus">Lexus</option>
+              <option value="Lincoln">Lincoln</option>
+              <option value="Lucid">Lucid</option>
+              <option value="MINI">MINI</option>
+              <option value="Mazda">Mazda</option>
+              <option value="Mercedes-Benz">Mercedes-Benz</option>
+              <option value="Mitsubishi">Mitsubishi</option>
+              <option value="Nissan">Nissan</option>
+              <option value="Polestar">Polestar</option>
+              <option value="Porsche">Porsche</option>
+              <option value="RAM">RAM</option>
+              <option value="Rivian">Rivian</option>
+              <option value="Subaru">Subaru</option>
+              <option value="Tesla">Tesla</option>
+              <option value="Toyota">Toyota</option>
+              <option value="Vinfast">Vinfast</option>
+              <option value="Volkswagen">Volkswagen</option>
+              <option value="Volvo">Volvo</option>
+            
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Model</label>
+            <select id="respModel">
+              <option value="">Select model</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Trim</label>
+            <input type="text" placeholder="e.g. EX, Sport, LX">
+          </div>
+          <div class="form-group">
+            <label>Mileage</label>
+            <input type="number" placeholder="e.g. 38200">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>VIN</label>
+            <input type="text" placeholder="17-character VIN" maxlength="17">
+          </div>
+          <div class="form-group">
+            <label>Exterior Color</label>
+            <select>
+              <option>White</option><option>Black</option><option>Silver</option>
+              <option>Gray</option><option>Blue</option><option>Red</option>
+              <option>Green</option><option>Brown / Tan</option><option>Gold</option>
+              <option>Orange</option><option>Yellow</option><option>Purple</option><option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Accident History</label>
+            <select>
+              <option>No accidents</option>
+              <option>1 minor accident</option>
+              <option>1 major accident</option>
+              <option>Multiple accidents</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Number of Previous Owners</label>
+            <select>
+              <option>1 — I am the only owner</option>
+              <option>2</option><option>3</option><option>4+</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Service Records Available?</label>
+            <select>
+              <option>Yes — full history</option>
+              <option>Partial records</option>
+              <option>No records</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Smog Status</label>
+            <select>
+              <option>Current / Passed</option>
+              <option>Needs smog</option>
+              <option>Exempt</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row single">
+          <div class="form-group">
+            <label>Known Issues or Disclosures <span style="font-size:11px;color:var(--gray-400);font-weight:400;">— required by law. Enter "None" if none.</span></label>
+            <textarea placeholder="e.g. Minor paint scratch on rear bumper. AC works perfectly. No mechanical issues known.">None known.</textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ OTD PRICE BREAKDOWN (shared) ═══ -->
+      <div class="form-section">
+        <div class="form-section-title">💰 Out-The-Door Price Breakdown</div>
+        <div style="font-size:13px;color:var(--gray-400);margin-bottom:16px;">Every line item is required. This is what makes OTD4Me different — no hidden fees, ever.</div>
+
+        <!-- Dealer OTD fields -->
+        <div id="dealerOTD">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Vehicle Price</label>
+              <input type="number" placeholder="e.g. 17500" oninput="calcOTD()">
+            </div>
+            <div class="form-group">
+              <label>Doc Fee <span style="font-size:11px;color:var(--gray-400);">CA max $85</span></label>
+              <input type="number" placeholder="e.g. 85" oninput="calcOTD()">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Smog Fee</label>
+              <input type="number" placeholder="e.g. 50" oninput="calcOTD()">
+            </div>
+            <div class="form-group">
+              <label>Sales Tax (est.)</label>
+              <input type="number" placeholder="e.g. 1500" oninput="calcOTD()">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>DMV / Registration Fee</label>
+              <input type="number" placeholder="e.g. 280" oninput="calcOTD()">
+            </div>
+            <div class="form-group">
+              <label>Any Other Fees</label>
+              <input type="number" placeholder="e.g. 0" oninput="calcOTD()">
+            </div>
+          </div>
+        </div>
+
+        <!-- Private Seller OTD fields (simpler) -->
+        <div id="privateOTD" style="display:none">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Asking Price</label>
+              <input type="number" placeholder="e.g. 15000" oninput="calcOTD()">
+            </div>
+            <div class="form-group">
+              <label>Smog (if you are providing it)</label>
+              <input type="number" placeholder="e.g. 50 or 0" oninput="calcOTD()">
+            </div>
+          </div>
+          <div style="font-size:12px;color:var(--gray-400);margin-bottom:12px;padding:8px 12px;background:var(--gray-50);border-radius:var(--radius-sm);">
+            💡 Private sales do not include doc fees, dealer add-ons, or dealer financing. Sales tax and DMV transfer fees are the buyer's responsibility and are not included in your OTD price.
+          </div>
+        </div>
+
+        <!-- OTD Total -->
+        <div class="otd-total-row">
+          <div class="otd-total-label">Total Out-The-Door Price</div>
+          <div class="otd-total-val" id="respOTDTotal">$0</div>
+        </div>
+      </div>
+
+      <!-- ═══ PHOTOS (shared) ═══ -->
+      <div class="form-section">
+        <div class="form-section-title">📸 Photos</div>
+        <div style="font-size:13px;color:var(--gray-400);margin-bottom:16px;">
+          Minimum 8 photos required. More photos = more serious buyers.
+        </div>
+        <div class="photo-grid">
+          <div class="photo-zone">Front</div>
+          <div class="photo-zone">Rear</div>
+          <div class="photo-zone">Driver Side</div>
+          <div class="photo-zone">Passenger Side</div>
+          <div class="photo-zone">Interior Front</div>
+          <div class="photo-zone">Interior Rear</div>
+          <div class="photo-zone">Odometer</div>
+          <div class="photo-zone">Engine Bay</div>
+        </div>
+      </div>
+
+      <!-- ═══ SELLER PITCH (shared) ═══ -->
+      <div class="form-section">
+        <div class="form-section-title" id="pitchTitle">🏢 Your Dealer Pitch</div>
+        <div class="form-group">
+          <label id="pitchLabel">Tell this buyer why your vehicle is the right choice. Max 300 characters.</label>
+          <textarea id="pitchText" maxlength="300" placeholder="e.g. This Accord has been dealer-maintained since new, never had an accident, and is priced $1,200 under market. We offer financing and can have it ready for test drive same day."></textarea>
+          <div class="char-count"><span id="pitchCount">0</span> / 300</div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-outline" onclick="showView('seller-dashboard')">Cancel</button>
+        <button class="btn btn-primary btn-lg" onclick="showView('buyer-dashboard')">Submit Response →</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="view-dealer-signup" class="view">
+  <div class="app-container">
+    <div class="page-header">
+      <button class="btn btn-outline btn-sm" onclick="showView('landing')">← Back</button>
+    </div>
+    <div class="form-card" style="max-width:580px">
+      <div class="dealer-signup-header">
+        <h2>Seller Sign Up</h2>
+        <p>List your inventory free and connect with motivated buyers in Southern California.</p>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">👤 I Am A...</div>
+        <div class="multi-select-group">
+          <span class="ms-option selected" onclick="toggleMS(this)">🏢 Licensed Dealer</span>
+          <span class="ms-option" onclick="toggleMS(this)">👤 Private Seller</span>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">🏢 Dealership Details</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Dealership Name</label>
+            <input type="text" placeholder="Your dealership name">
+          </div>
+          <div class="form-group">
+            <label>CA Dealer License #</label>
+            <input type="text" placeholder="e.g. DA12345">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>City</label>
+            <input type="text" placeholder="City, CA">
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" placeholder="(555) 000-0000">
+          </div>
+        </div>
+        <div class="form-row single">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" placeholder="dealer@yourlot.com">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">🏷 Verification Assets</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Dealership Logo</label>
+            <div class="upload-zone"><span class="upload-icon">🖼</span>Upload Logo (PNG/JPG)</div>
+          </div>
+          <div class="form-group">
+            <label>Dealer License Photo / PDF</label>
+            <div class="upload-zone"><span class="upload-icon">📄</span>Upload License Doc</div>
+          </div>
+        </div>
+        <div class="alert alert-blue mt-4">🔍 We manually verify all dealer licenses before awarding the Verified Dealer badge. Usually within 1 business day.</div>
+      </div>
+
+      <div class="form-footer">
+        <div class="form-note">Free to join · Free to list · Free to respond</div>
+        <button class="btn btn-primary btn-lg" onclick="showView('seller-dashboard')">Create Seller Account →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+  // ════════════════════════════════════
+  // SUPABASE INIT
+  // ════════════════════════════════════
+  // Replace these with your actual Supabase project values
+  // Found in: Supabase Dashboard → Project Settings → API
+  const SUPABASE_URL  = 'https://xuijnrsnjbppkavcueta.supabase.co';
+  const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1aWpucnNuamJwcGthdmN1ZXRhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3MDAyNTcsImV4cCI6MjA4NzI3NjI1N30.qUkClvOKx66-wGcXycrX_rSre0tbwWl3QjVvuyoD1kk';
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  // ════════════════════════════════════
+  // AUTH STATE — runs on every page load
+  // ════════════════════════════════════
+  (async function initAuth() {
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (session) {
+      // User is logged in — check if they've completed onboarding
+      const onboarded = localStorage.getItem('otd4me_onboarded');
+      if (!onboarded) {
+        showView('onboarding');
+      } else {
+        // Go to their preferred landing based on onboarding choice
+        const intent = localStorage.getItem('otd4me_intent') || 'buyer';
+        if (intent === 'buyer') {
+          showView('landing');
+        } else {
+          showView('buyer-dashboard');
+          setTimeout(() => showUDTab('seller'), 50);
+        }
+      }
+    } else {
+      // Not logged in — show landing page (public)
+      // Auth screen shown only when they try to access protected actions
+      showView('landing');
+    }
+  })();
+
+  // Listen for auth state changes (e.g. after Google OAuth redirect)
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+      const onboarded = localStorage.getItem('otd4me_onboarded');
+      if (!onboarded) {
+        showView('onboarding');
+      }
+    }
+    if (event === 'SIGNED_OUT') {
+      localStorage.removeItem('otd4me_onboarded');
+      localStorage.removeItem('otd4me_intent');
+      showView('landing');
+    }
+  });
+
+  // ════════════════════════════════════
+  // AUTH FUNCTIONS
+  // ════════════════════════════════════
+
+  function switchAuthMode(mode) {
+    document.getElementById('authModeLogin').style.display  = mode === 'login'  ? 'block' : 'none';
+    document.getElementById('authModeSignup').style.display = mode === 'signup' ? 'block' : 'none';
+    clearAuthErrors();
+  }
+
+  function clearAuthErrors() {
+    ['authError','authSuccess','authErrorSignup','authSuccessSignup'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.classList.remove('visible'); el.textContent = ''; }
+    });
+  }
+
+  function showAuthError(id, msg) {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = msg; el.classList.add('visible'); }
+  }
+
+  function showAuthSuccess(id, msg) {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = msg; el.classList.add('visible'); }
+  }
+
+  function setAuthLoading(btnId, loading) {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    if (loading) {
+      btn.disabled = true;
+      btn.innerHTML = '<span class="auth-spinner"></span>Please wait...';
+    } else {
+      btn.disabled = false;
+      btn.textContent = btnId === 'loginBtn' ? 'Sign In' : 'Create Account — Free';
+    }
+  }
+
+  async function signInWithGoogle() {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.href }
+    });
+    if (error) showAuthError('authError', error.message);
+  }
+
+  async function signInWithEmail() {
+    clearAuthErrors();
+    const email    = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+
+    if (!email || !password) {
+      showAuthError('authError', 'Please enter your email and password.');
+      return;
+    }
+
+    setAuthLoading('loginBtn', true);
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    setAuthLoading('loginBtn', false);
+
+    if (error) {
+      showAuthError('authError', error.message === 'Invalid login credentials'
+        ? 'Incorrect email or password. Please try again.'
+        : error.message);
+    } else {
+      const onboarded = localStorage.getItem('otd4me_onboarded');
+      showView(onboarded ? 'landing' : 'onboarding');
+    }
+  }
+
+  async function signUpWithEmail() {
+    clearAuthErrors();
+    const name     = document.getElementById('signupName').value.trim();
+    const email    = document.getElementById('signupEmail').value.trim();
+    const password = document.getElementById('signupPassword').value;
+
+    if (!name)            { showAuthError('authErrorSignup', 'Please enter your first name.'); return; }
+    if (!email)           { showAuthError('authErrorSignup', 'Please enter your email address.'); return; }
+    if (password.length < 8) { showAuthError('authErrorSignup', 'Password must be at least 8 characters.'); return; }
+
+    setAuthLoading('signupBtn', true);
+    const { data, error } = await supabase.auth.signUp({
+      email, password,
+      options: { data: { full_name: name } }
+    });
+    setAuthLoading('signupBtn', false);
+
+    if (error) {
+      showAuthError('authErrorSignup', error.message);
+    } else if (data.user && !data.session) {
+      // Email confirmation required
+      showAuthSuccess('authSuccessSignup', 'Account created! Check your email to confirm your address, then sign in.');
+    } else {
+      showView('onboarding');
+    }
+  }
+
+  async function sendPasswordReset() {
+    const email = document.getElementById('loginEmail').value.trim();
+    if (!email) {
+      showAuthError('authError', 'Enter your email address above first.');
+      return;
+    }
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.href
+    });
+    if (error) {
+      showAuthError('authError', error.message);
+    } else {
+      showAuthSuccess('authSuccess', 'Password reset email sent. Check your inbox.');
+    }
+  }
+
+  async function signOut() {
+    await supabase.auth.signOut();
+    localStorage.removeItem('otd4me_onboarded');
+    localStorage.removeItem('otd4me_intent');
+    showView('landing');
+  }
+
+  // ════════════════════════════════════
+  // ONBOARDING
+  // ════════════════════════════════════
+  function completeOnboarding(intent) {
+    localStorage.setItem('otd4me_onboarded', 'true');
+    localStorage.setItem('otd4me_intent', intent);
+
+    if (intent === 'buyer') {
+      showView('buyer-form');
+    } else {
+      showView('buyer-dashboard');
+      setTimeout(() => showUDTab('seller'), 50);
+    }
+  }
+
+  // ════════════════════════════════════
+  // PROTECTED ACTION GATE
+  // Wrap any action that requires login
+  // Usage: requireAuth(() => showView('buyer-form'))
+  // ════════════════════════════════════
+  async function requireAuth(callback) {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      callback();
+    } else {
+      // Save intended destination and redirect to auth
+      showView('auth');
+    }
+  }
+
+
+  // ════════════════════════════════════
+  // SHARED INVENTORY + BUYER DATA STORE
+  // ════════════════════════════════════
+
+  const inventory = [
+    { year:2021, make:'Honda',   model:'Accord',     body:'Sedan', miles:38200, otd:19450, trim:'EX',     accident:false },
+    { year:2022, make:'Honda',   model:'Pilot',      body:'SUV',   miles:42100, otd:34200, trim:'EX-L',   accident:false },
+    { year:2020, make:'Toyota',  model:'Camry',      body:'Sedan', miles:55000, otd:18900, trim:'LE',     accident:false },
+    { year:2021, make:'Toyota',  model:'Highlander', body:'SUV',   miles:31000, otd:38500, trim:'XLE',    accident:false },
+    { year:2022, make:'BMW',     model:'3 Series',   body:'Sedan', miles:28000, otd:44800, trim:'330i',   accident:false }
+  ];
+
+  const buyerRequests = [
+    { makes:['Honda'],   models:['Accord'],     body:'Sedan', yearMin:2017, yearMax:2023, maxMiles:75000,  maxOTD:20000 },
+    { makes:['Honda'],   models:['Pilot'],      body:'SUV',   yearMin:2019, yearMax:2024, maxMiles:60000,  maxOTD:35000 },
+    { makes:['Toyota'],  models:['Highlander'], body:'SUV',   yearMin:2018, yearMax:2024, maxMiles:80000,  maxOTD:45000 },
+    { makes:['BMW'],     models:['3 Series'],   body:'Sedan', yearMin:2020, yearMax:2023, maxMiles:50000,  maxOTD:50000 },
+    { makes:['Mazda'],   models:['CX-5'],       body:'SUV',   yearMin:2020, yearMax:2024, maxMiles:40000,  maxOTD:28000 }
+  ];
+
+  function vehicleMatchesBuyer(v, b) {
+    const makeOK = !b.makes || b.makes.length === 0 || b.makes.includes(v.make);
+    const modelOK = !b.models || b.models.length === 0 || b.models.includes(v.model);
+    const bodyOK = !b.body || b.body === v.body;
+    const yearOK = v.year >= b.yearMin && v.year <= b.yearMax;
+    const milesOK = v.miles <= b.maxMiles;
+    const otdOK = v.otd <= b.maxOTD;
+    return makeOK && modelOK && bodyOK && yearOK && milesOK && otdOK;
+  }
+
+  function countBuyerMatchesForVehicle(v) {
+    return buyerRequests.filter(b => vehicleMatchesBuyer(v, b)).length;
+  }
+
+  function countInventoryMatchesForBuyer(b) {
+    return inventory.filter(v => vehicleMatchesBuyer(v, b)).length;
+  }
+
+  // ── BUYER FORM: live match counter ──
+  function updateBuyerMatchCount() {
+    const y1El = document.getElementById('bYear1');
+    const y2El = document.getElementById('bYear2');
+    const miEl = document.getElementById('bMileage');
+    const buEl = document.getElementById('bBudget');
+    if (!y1El) return;
+
+    const yearMin = y1El.value === 'any' ? 1900 : (parseInt(y1El.value) || 2005);
+    const yearMax = y2El.value === 'newer' ? 9999 : (parseInt(y2El.value) || 2025);
+    const milesMap = {
+      'Under 30,000 miles':30000,'Under 50,000 miles':50000,'Under 75,000 miles':75000,
+      'Under 100,000 miles':100000,'Under 125,000 miles':125000,'125,000+ miles OK':999999
+    };
+    const budgetMap = {
+      'Under $10,000':10000,'Under $15,000':15000,'Under $20,000':20000,
+      'Under $25,000':25000,'Under $30,000':30000,'Under $40,000':40000,
+      'Under $50,000':50000,'$50,000+':999999
+    };
+    const maxMiles = milesMap[miEl.value] || 75000;
+    const maxOTD   = budgetMap[buEl.value] || 20000;
+
+    const makeVal = document.getElementById('bMake') ? document.getElementById('bMake').value : '';
+    const modelVal = document.getElementById('bModel') ? document.getElementById('bModel').value : '';
+    const buyerCriteria = { makes: makeVal ? [makeVal] : [], models: modelVal ? [modelVal] : [], body:'', yearMin, yearMax, maxMiles, maxOTD };
+    const matches = countInventoryMatchesForBuyer(buyerCriteria);
+    const total = inventory.length;
+
+    const countEl = document.getElementById('buyerMatchCount');
+    const breakEl = document.getElementById('buyerMatchBreakdown');
+    if (countEl) {
+      countEl.textContent = matches;
+      countEl.style.color = matches > 0 ? '#60A5FA' : '#F87171';
+    }
+    if (breakEl) {
+      if (matches === 0) {
+        breakEl.innerHTML = 'No current inventory matches<br>Sellers will see your request & respond';
+      } else {
+        const dealers = Math.min(matches, 3);
+        breakEl.innerHTML = `${dealers} verified dealer${dealers!==1?'s':''} can respond<br>${total} total vehicles in platform`;
+      }
+    }
+  }
+
+  // ── SELLER INVENTORY: live buyer match counter ──
+  function updateSellerMatchCount() {
+    const yearEl = document.querySelector('#addVehiclePanel select');
+    const makeEl = document.querySelectorAll('#addVehiclePanel select')[1];
+    const modelEl = document.querySelectorAll('#addVehiclePanel select')[2];
+    const milesEl = document.querySelector('#addVehiclePanel input[type="number"]');
+    const otdEl   = document.querySelectorAll('#addVehiclePanel input[type="number"]')[1];
+    const bodyEl  = document.querySelectorAll('#addVehiclePanel select')[4];
+    if (!yearEl || !makeEl) return;
+
+    const vehicle = {
+      year:  parseInt(yearEl.value) || 2021,
+      make:  makeEl.value || 'Honda',
+      model: modelEl ? modelEl.value : 'Accord',
+      body:  bodyEl ? bodyEl.value : 'Sedan',
+      miles: parseInt(milesEl ? milesEl.value : 38200) || 38200,
+      otd:   parseInt(otdEl ? otdEl.value : 19450) || 19450
+    };
+
+    const matches = countBuyerMatchesForVehicle(vehicle);
+    const countEl = document.getElementById('liveMatchCount');
+    const subEl   = document.getElementById('liveMatchSub');
+
+    if (countEl) {
+      countEl.textContent = matches;
+      countEl.style.color = matches > 0 ? '#60A5FA' : '#F87171';
+    }
+    if (subEl) {
+      if (matches === 0) subEl.textContent = 'No current buyer requests match — post anyway, new buyers join daily';
+      else subEl.textContent = `${matches} buyer${matches!==1?' requests':'request'} waiting for this type of vehicle!`;
+    }
+  }
+
+  // ── SELLER INVENTORY: render inventory cards ──
+  function renderInventory() {
+    const list = document.getElementById('inventoryList');
+    if (!list) return;
+    let html = '';
+    inventory.forEach((v, i) => {
+      const matches = countBuyerMatchesForVehicle(v);
+      const matchClass = matches === 0 ? 'zero' : '';
+      const matchIcon  = matches > 0 ? '🎯' : '⏳';
+      const matchMsg   = matches > 0
+        ? `buyer request${matches!==1?'s':''} match this vehicle`
+        : 'No current matches — new buyers join daily';
+      html += `
+        <div class="inventory-card">
+          <div class="inv-card-top">
+            <div>
+              <div class="inv-car-title">${v.year} ${v.make} ${v.model} ${v.trim}</div>
+              <div class="inv-car-sub">${v.body} · ${v.miles.toLocaleString()} miles · ${v.accident?'1 accident':'Clean history'}</div>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-outline btn-sm">Edit</button>
+              <button class="btn btn-outline btn-sm" style="color:var(--red);border-color:var(--red)">Remove</button>
+            </div>
+          </div>
+          <div class="inv-card-body">
+            <div class="inv-stat"><div class="inv-stat-val">$${v.otd.toLocaleString()}</div><div class="inv-stat-label">OTD Price</div></div>
+            <div class="inv-stat"><div class="inv-stat-val">${v.miles.toLocaleString()}</div><div class="inv-stat-label">Miles</div></div>
+            <div class="inv-stat"><div class="inv-stat-val">${v.year}</div><div class="inv-stat-label">Year</div></div>
+            <div class="inv-stat"><div class="inv-stat-val">${v.body}</div><div class="inv-stat-label">Body</div></div>
+          </div>
+          <div class="inv-match-bar ${matchClass}">
+            <div class="imb-left">
+              <span style="font-size:20px;">${matchIcon}</span>
+              <div>
+                <div class="imb-count">${matches}</div>
+                <div class="imb-label">${matchMsg}</div>
+              </div>
+            </div>
+            ${matches > 0 ? `<button class="btn btn-green btn-sm" onclick="showSellerTab('buyer-requests');showView('seller-dashboard')">View Matches →</button>` : ''}
+          </div>
+          <div class="inv-card-actions">
+            <button class="btn btn-blue btn-sm" onclick="showView('seller-response-form')">⚡ Quick Respond to Buyer →</button>
+          </div>
+        </div>
+      `;
+    });
+    list.innerHTML = html;
+  }
+
+  // ── ADD VEHICLE to inventory ──
+  function addToInventory() {
+    const panel = document.getElementById('addVehiclePanel');
+    const selects = panel.querySelectorAll('select');
+    const inputs  = panel.querySelectorAll('input[type="number"]');
+    const newVehicle = {
+      year:  parseInt(selects[0].value) || 2021,
+      make:  selects[1].value || 'Honda',
+      model: selects[2].value || 'Accord',
+      body:  selects[4].value || 'Sedan',
+      miles: parseInt(inputs[0].value) || 0,
+      otd:   parseInt(inputs[1].value) || 0,
+      trim:  panel.querySelector('input[type="text"]').value || '',
+      accident: false
+    };
+    inventory.push(newVehicle);
+    panel.style.display = 'none';
+    renderInventory();
+    document.getElementById('stat-inventory').textContent = inventory.length;
+    // Recalculate total matches
+    const totalMatches = inventory.reduce((sum, v) => sum + countBuyerMatchesForVehicle(v), 0);
+    document.getElementById('stat-matches').textContent = totalMatches;
+  }
+
+  // ── TOGGLE ADD PANEL ──
+  function toggleAddPanel() {
+    const panel = document.getElementById('addVehiclePanel');
+    if (!panel) return;
+    const isHidden = panel.style.display === 'none' || panel.style.display === '';
+    panel.style.display = isHidden ? 'block' : 'none';
+    if (isHidden) {
+      showSellerTab('inventory');
+      updateSellerMatchCount();
+      panel.scrollIntoView({ behavior:'smooth', block:'start' });
+    }
+  }
+
+  // ── SELLER TAB SWITCHER ──
+  function showSellerTab(tabName) {
+    document.querySelectorAll('.seller-tab-content').forEach(t => t.style.display = 'none');
+    document.querySelectorAll('#sellerTabs .tab').forEach(t => t.classList.remove('active'));
+    const el = document.getElementById('tab-' + tabName);
+    if (el) el.style.display = 'block';
+    const tabs = document.querySelectorAll('#sellerTabs .tab');
+    const map = { 'buyer-requests':0, 'inventory':1, 'messages':2 };
+    if (tabs[map[tabName]]) tabs[map[tabName]].classList.add('active');
+    if (tabName === 'inventory') renderInventory();
+  }
+
+  // Init on load
+  window.addEventListener('DOMContentLoaded', () => {
+    renderInventory();
+    updateBuyerMatchCount();
+  });
+
+  const VEHICLE_DATA = {
+  "Acura": [
+    "ILX",
+    "TLX",
+    "RLX",
+    "MDX",
+    "RDX",
+    "ZDX",
+    "Integra",
+    "NSX"
+  ],
+  "Alfa Romeo": [
+    "Giulia",
+    "Stelvio",
+    "Tonale",
+    "4C"
+  ],
+  "Audi": [
+    "A3",
+    "A4",
+    "A5",
+    "A6",
+    "A7",
+    "A8",
+    "Q3",
+    "Q4 e-tron",
+    "Q5",
+    "Q6 e-tron",
+    "Q7",
+    "Q8",
+    "Q8 e-tron",
+    "TT",
+    "R8",
+    "e-tron GT",
+    "RS3",
+    "RS5",
+    "RS6",
+    "RS7",
+    "S3",
+    "S4",
+    "S5",
+    "S6",
+    "S7",
+    "S8",
+    "SQ5",
+    "SQ7",
+    "SQ8"
+  ],
+  "BMW": [
+    "2 Series",
+    "3 Series",
+    "4 Series",
+    "5 Series",
+    "7 Series",
+    "8 Series",
+    "X1",
+    "X2",
+    "X3",
+    "X4",
+    "X5",
+    "X6",
+    "X7",
+    "XM",
+    "Z4",
+    "i3",
+    "i4",
+    "i5",
+    "i7",
+    "iX",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M8",
+    "X3 M",
+    "X4 M",
+    "X5 M",
+    "X6 M"
+  ],
+  "Buick": [
+    "Enclave",
+    "Encore",
+    "Encore GX",
+    "Envision",
+    "Envista",
+    "LaCrosse"
+  ],
+  "Cadillac": [
+    "CT4",
+    "CT5",
+    "Escalade",
+    "Escalade ESV",
+    "Lyriq",
+    "XT4",
+    "XT5",
+    "XT6",
+    "Celestiq"
+  ],
+  "Chevrolet": [
+    "Blazer",
+    "Blazer EV",
+    "Bolt EV",
+    "Bolt EUV",
+    "Camaro",
+    "Colorado",
+    "Corvette",
+    "Equinox",
+    "Equinox EV",
+    "Express",
+    "Malibu",
+    "Silverado 1500",
+    "Silverado 2500HD",
+    "Silverado 3500HD",
+    "Silverado EV",
+    "Spark",
+    "Suburban",
+    "Tahoe",
+    "Traverse",
+    "Trax",
+    "Trailblazer"
+  ],
+  "Chrysler": [
+    "300",
+    "Pacifica",
+    "Voyager"
+  ],
+  "Dodge": [
+    "Challenger",
+    "Charger",
+    "Durango",
+    "Hornet"
+  ],
+  "Fiat": [
+    "500",
+    "500X",
+    "500L",
+    "124 Spider"
+  ],
+  "Ford": [
+    "Bronco",
+    "Bronco Sport",
+    "Edge",
+    "Escape",
+    "Expedition",
+    "Explorer",
+    "F-150",
+    "F-150 Lightning",
+    "F-250 Super Duty",
+    "F-350 Super Duty",
+    "Maverick",
+    "Mustang",
+    "Mustang Mach-E",
+    "Ranger",
+    "Transit",
+    "Transit Connect"
+  ],
+  "Genesis": [
+    "G70",
+    "G80",
+    "G90",
+    "GV70",
+    "GV80",
+    "GV60",
+    "Electrified G80",
+    "Electrified GV70"
+  ],
+  "GMC": [
+    "Acadia",
+    "Canyon",
+    "Envoy",
+    "Hummer EV",
+    "Hummer EV SUV",
+    "Safari",
+    "Sierra 1500",
+    "Sierra 2500HD",
+    "Sierra 3500HD",
+    "Terrain",
+    "Yukon",
+    "Yukon XL"
+  ],
+  "Honda": [
+    "Accord",
+    "Civic",
+    "CR-V",
+    "CR-V Hybrid",
+    "HR-V",
+    "Insight",
+    "Odyssey",
+    "Passport",
+    "Pilot",
+    "Prologue",
+    "Ridgeline"
+  ],
+  "Hyundai": [
+    "Elantra",
+    "Ioniq",
+    "Ioniq 5",
+    "Ioniq 6",
+    "Kona",
+    "Kona Electric",
+    "Nexo",
+    "Palisade",
+    "Santa Cruz",
+    "Santa Fe",
+    "Sonata",
+    "Tucson",
+    "Tucson Hybrid",
+    "Veloster",
+    "Venue"
+  ],
+  "Infiniti": [
+    "Q50",
+    "Q60",
+    "QX50",
+    "QX55",
+    "QX60",
+    "QX80"
+  ],
+  "Jaguar": [
+    "E-Pace",
+    "F-Pace",
+    "F-Type",
+    "I-Pace",
+    "XE",
+    "XF"
+  ],
+  "Jeep": [
+    "Cherokee",
+    "Compass",
+    "Gladiator",
+    "Grand Cherokee",
+    "Grand Cherokee L",
+    "Grand Cherokee 4xe",
+    "Grand Wagoneer",
+    "Renegade",
+    "Wagoneer",
+    "Wrangler",
+    "Wrangler 4xe"
+  ],
+  "Kia": [
+    "Carnival",
+    "EV6",
+    "EV9",
+    "Forte",
+    "K5",
+    "Niro",
+    "Niro EV",
+    "Niro Plug-In Hybrid",
+    "Seltos",
+    "Sorento",
+    "Soul",
+    "Sportage",
+    "Stinger",
+    "Telluride"
+  ],
+  "Land Rover": [
+    "Defender",
+    "Discovery",
+    "Discovery Sport",
+    "Range Rover",
+    "Range Rover Evoque",
+    "Range Rover Sport",
+    "Range Rover Velar"
+  ],
+  "Lexus": [
+    "ES",
+    "GS",
+    "GX",
+    "IS",
+    "LC",
+    "LS",
+    "LX",
+    "NX",
+    "NX Plug-In Hybrid",
+    "RC",
+    "RX",
+    "RX Hybrid",
+    "RX Plug-In Hybrid",
+    "TX",
+    "UX",
+    "UX Electric"
+  ],
+  "Lincoln": [
+    "Aviator",
+    "Corsair",
+    "Nautilus",
+    "Navigator",
+    "Navigator L"
+  ],
+  "Lucid": [
+    "Air",
+    "Air Grand Touring",
+    "Air Sapphire",
+    "Gravity"
+  ],
+  "Mazda": [
+    "CX-30",
+    "CX-5",
+    "CX-50",
+    "CX-70",
+    "CX-90",
+    "Mazda3",
+    "Mazda3 Sedan",
+    "Mazda6",
+    "MX-30",
+    "MX-5 Miata"
+  ],
+  "Mercedes-Benz": [
+    "A-Class",
+    "C-Class",
+    "CLA",
+    "CLE",
+    "E-Class",
+    "EQB",
+    "EQE",
+    "EQE SUV",
+    "EQS",
+    "EQS SUV",
+    "G-Class",
+    "GLA",
+    "GLB",
+    "GLC",
+    "GLE",
+    "GLG",
+    "GLS",
+    "S-Class",
+    "SL",
+    "AMG GT",
+    "AMG C 63",
+    "AMG E 63",
+    "AMG GLE 63",
+    "AMG GLS 63"
+  ],
+  "MINI": [
+    "Clubman",
+    "Convertible",
+    "Cooper",
+    "Countryman",
+    "Hardtop",
+    "Paceman",
+    "Roadster"
+  ],
+  "Mitsubishi": [
+    "Eclipse Cross",
+    "Galant",
+    "Mirage",
+    "Mirage G4",
+    "Outlander",
+    "Outlander Plug-In Hybrid",
+    "Outlander Sport"
+  ],
+  "Nissan": [
+    "Altima",
+    "Ariya",
+    "Armada",
+    "Frontier",
+    "GT-R",
+    "Kicks",
+    "Leaf",
+    "Maxima",
+    "Murano",
+    "Pathfinder",
+    "Rogue",
+    "Rogue Sport",
+    "Sentra",
+    "Titan",
+    "Titan XD",
+    "Versa"
+  ],
+  "Polestar": [
+    "Polestar 2",
+    "Polestar 3",
+    "Polestar 4"
+  ],
+  "Porsche": [
+    "718 Boxster",
+    "718 Cayman",
+    "911",
+    "Cayenne",
+    "Cayenne E-Hybrid",
+    "Macan",
+    "Macan Electric",
+    "Panamera",
+    "Taycan"
+  ],
+  "RAM": [
+    "1500",
+    "1500 Classic",
+    "2500",
+    "3500",
+    "ProMaster",
+    "ProMaster City"
+  ],
+  "Rivian": [
+    "R1S",
+    "R1T",
+    "R2",
+    "EDV"
+  ],
+  "Subaru": [
+    "Ascent",
+    "BRZ",
+    "Crosstrek",
+    "Forester",
+    "Impreza",
+    "Legacy",
+    "Outback",
+    "Solterra",
+    "WRX"
+  ],
+  "Tesla": [
+    "Cybertruck",
+    "Model 3",
+    "Model S",
+    "Model X",
+    "Model Y"
+  ],
+  "Toyota": [
+    "4Runner",
+    "Avalon",
+    "bZ4X",
+    "Camry",
+    "C-HR",
+    "Corolla",
+    "Corolla Cross",
+    "Crown",
+    "GR86",
+    "GR Corolla",
+    "GR Supra",
+    "Highlander",
+    "Highlander Hybrid",
+    "Land Cruiser",
+    "Mirai",
+    "Prius",
+    "Prius Prime",
+    "RAV4",
+    "RAV4 Hybrid",
+    "RAV4 Prime",
+    "Sequoia",
+    "Sienna",
+    "Tacoma",
+    "Tundra",
+    "Tundra Hybrid",
+    "Venza"
+  ],
+  "Vinfast": [
+    "VF 8",
+    "VF 9"
+  ],
+  "Volkswagen": [
+    "Arteon",
+    "Atlas",
+    "Atlas Cross Sport",
+    "Golf",
+    "Golf GTI",
+    "Golf R",
+    "ID.4",
+    "ID.Buzz",
+    "Jetta",
+    "Passat",
+    "Taos",
+    "Tiguan"
+  ],
+  "Volvo": [
+    "C40 Recharge",
+    "EX30",
+    "EX40",
+    "EX90",
+    "S60",
+    "S90",
+    "V60",
+    "V90",
+    "XC40",
+    "XC40 Recharge",
+    "XC60",
+    "XC90"
+  ]
+};
+
+  function populateModels(makeSelectId, modelSelectId) {
+    const make = document.getElementById(makeSelectId).value;
+    const modelSelect = document.getElementById(modelSelectId);
+    modelSelect.innerHTML = '<option value="">Select model</option>';
+    if (make && VEHICLE_DATA[make]) {
+      VEHICLE_DATA[make].forEach(model => {
+        const opt = document.createElement('option');
+        opt.value = model;
+        opt.textContent = model;
+        modelSelect.appendChild(opt);
+      });
+    }
+    // Trigger match count update after model change
+    if (modelSelectId === 'bModel') updateBuyerMatchCount();
+    if (modelSelectId === 'invModel') updateSellerMatchCount();
+  }
+
+  function switchSellerType(type) {
+    const isDealer = type === 'dealer';
+
+    // Toggle active button styles
+    document.getElementById('btnDealer').classList.toggle('active', isDealer);
+    document.getElementById('btnPrivate').classList.toggle('active', !isDealer);
+
+    // Show/hide dealer-only section
+    document.getElementById('dealerSection').style.display = isDealer ? '' : 'none';
+    document.getElementById('privateSection').style.display = isDealer ? 'none' : '';
+
+    // Show/hide OTD sections
+    document.getElementById('dealerOTD').style.display = isDealer ? '' : 'none';
+    document.getElementById('privateOTD').style.display = isDealer ? 'none' : '';
+
+    // Update hint text
+    document.getElementById('sellerTypeHint').textContent = isDealer
+      ? 'Showing the dealer form — includes dealership info, financing, and warranty fields.'
+      : 'Showing the private seller form — includes title status, lien, and smog responsibility fields.';
+
+    // Update pitch section title and placeholder
+    document.getElementById('pitchTitle').textContent = isDealer
+      ? '🏢 Your Dealer Pitch'
+      : '👤 Your Seller Pitch';
+    document.getElementById('pitchLabel').textContent = isDealer
+      ? 'Tell this buyer why your vehicle is the right choice. Max 300 characters.'
+      : 'Tell the buyer about yourself and the vehicle. Be honest and specific. Max 300 characters.';
+    document.getElementById('pitchText').placeholder = isDealer
+      ? 'e.g. This Accord has been dealer-maintained since new, never had an accident, and is priced $1,200 under market. We offer financing and can have it ready for test drive same day.'
+      : 'e.g. I bought this vehicle new and have been the only driver for 4 years. Always serviced on time, no accidents, clean title. Selling because I just got a new truck.';
+
+    // Reset OTD total
+    document.getElementById('respOTDTotal').textContent = '$0';
+  }
+
+  function showUDTab(tab) {
+    // Hide all panels
+    ['request','matches','seller'].forEach(t => {
+      const panel = document.getElementById('udPanel-' + t);
+      const btn   = document.getElementById('udTab-' + t);
+      if (panel) panel.style.display = 'none';
+      if (btn) btn.classList.remove('active');
+    });
+    // Show selected
+    const activePanel = document.getElementById('udPanel-' + tab);
+    const activeBtn   = document.getElementById('udTab-' + tab);
+    if (activePanel) activePanel.style.display = 'block';
+    if (activeBtn) activeBtn.classList.add('active');
+  }
+
+  function toggleMobileMenu() {
+    const btn  = document.getElementById('hamburgerBtn');
+    const menu = document.getElementById('mobileMenu');
+    btn.classList.toggle('open');
+    menu.classList.toggle('open');
+  }
+
+  function closeMobileMenu() {
+    document.getElementById('hamburgerBtn').classList.remove('open');
+    document.getElementById('mobileMenu').classList.remove('open');
+  }
+
+    function showView(id) {
+    // Redirect seller-dashboard into unified dashboard seller tab
+    if (id === 'seller-dashboard') {
+      showView('buyer-dashboard');
+      setTimeout(() => showUDTab('seller'), 50);
+      return;
+    }
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    const el = document.getElementById('view-' + id);
+    if (el) el.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    closeMobileMenu();
+  }
+
+  function toggleMS(el) {
+    el.classList.toggle('selected');
+  }
+
+  // ── DASHBOARD DEFAULT TAB ──
+  // Ensures My Request is shown by default when dashboard loads
+  document.addEventListener('DOMContentLoaded', function() {
+    showUDTab('request');
+  });
+
+  // ── LIVE FEED DATA ──
+  const feedRequests = [
+    {
+      initials: 'JM', name: 'Jason M.', time: '3 min ago',
+      title: 'Toyota Camry or Honda Accord',
+      story: 'Daily commuter, about 40 miles each way. Need something reliable and fuel-efficient. Open to sedan suggestions from knowledgeable sellers.',
+      chips: ['Sedan', '2018–2023', 'Under 70k mi', 'Apple CarPlay'],
+      budget: 'Under $20,000', location: 'Temecula, CA', timeline: 'ASAP', responses: 4, color: '#1B2A4A'
+    },
+    {
+      initials: 'SR', name: 'Sandra R.', time: '11 min ago',
+      title: 'Family SUV — 3rd Row Required',
+      story: 'Need room for 3 kids and a dog. Looking for a Highlander, Pilot, or similar. Must have backup camera and Bluetooth.',
+      chips: ['SUV', '3rd Row', '2019–2024', 'Under 60k mi', 'Backup Camera'],
+      budget: 'Under $35,000', location: 'Murrieta, CA', timeline: 'Within 30 days', responses: 7, color: '#2563EB'
+    },
+    {
+      initials: 'DT', name: 'David T.', time: '28 min ago',
+      title: 'Ford F-150 — Work Truck Needed',
+      story: 'Need a solid work truck for a small landscaping business. Towing capacity matters. Open to crew cab or extended.',
+      chips: ['Truck', 'F-150', '2018–2022', 'AWD/4WD', 'Towing Pkg'],
+      budget: 'Under $38,000', location: 'Escondido, CA', timeline: 'Within 30 days', responses: 5, color: '#16A34A'
+    },
+    {
+      initials: 'KL', name: 'Karen L.', time: '45 min ago',
+      title: 'Mazda CX-5 or Comparable Compact SUV',
+      story: 'First vehicle purchase — a little nervous about the process! Love the CX-5 but open to comparables. Fuel economy and safety are my top priorities.',
+      chips: ['Compact SUV', '2020–2024', 'Under 40k mi', 'Lane Assist'],
+      budget: 'Under $28,000', location: 'San Diego, CA', timeline: 'Within 30 days', responses: 3, color: '#7C3AED'
+    },
+    {
+      initials: 'RP', name: 'Robert P.', time: '1 hr ago',
+      title: 'Luxury Sedan — BMW or Mercedes',
+      story: 'Upgrading from a Camry. Looking for a premium feel, tech-forward interior. Prefer certified pre-owned with a remaining warranty.',
+      chips: ['Luxury Sedan', 'CPO Preferred', '2020–2023', 'Leather', 'Navigation'],
+      budget: 'Under $50,000', location: 'Carlsbad, CA', timeline: 'ASAP', responses: 6, color: '#D97706'
+    }
+  ];
+
+  function buildFullCard(req, idx) {
+    const chipsHTML = req.chips.map(c => `<span class="feed-chip">${c}</span>`).join('');
+    return `
+      <div class="feed-card-full" style="animation-delay:${idx*0.07}s">
+        <div class="fc-top">
+          <div class="fc-buyer-info">
+            <div class="fc-avatar" style="background:${req.color}">${req.initials}</div>
+            <div>
+              <div class="fc-name">${req.name}</div>
+              <div class="fc-time">⏱ ${req.time}</div>
+            </div>
+          </div>
+          <div class="fc-top-right">
+            <span class="feed-chip location">📍 ${req.location}</span>
+            <span class="feed-chip timeline">🗓 ${req.timeline}</span>
+            <span style="font-size:12px;color:var(--gray-400);">🔒 Free · Contact protected</span>
+          </div>
+        </div>
+        <div class="fc-body">
+          <div>
+            <div class="fc-title">${req.title}</div>
+            <div class="fc-story">"${req.story}"</div>
+            <div class="fc-chips">${chipsHTML}</div>
+          </div>
+          <div class="fc-seller-cta">
+            <div class="fc-budget-box">
+              <div class="fc-budget-label">OTD Budget</div>
+              <div class="fc-budget-val">${req.budget}</div>
+            </div>
+            <button class="btn btn-blue btn-sm" style="width:100%" onclick="showView('seller-response-form')">Respond as Seller →</button>
+            <div style="font-size:11px;color:var(--gray-400);text-align:right;">${req.responses} seller${req.responses !== 1 ? 's' : ''} responded</div>
+          </div>
+        </div>
+        <div class="fc-footer">
+          <div class="fc-footer-left">
+            <span class="fc-stat">🚗 <strong>${req.chips[0]}</strong></span>
+            <span class="fc-stat">📅 <strong>${req.chips[1]}</strong></span>
+            <span class="fc-stat">🔢 <strong>${req.chips[2]}</strong></span>
+          </div>
+          <span>${req.responses} response${req.responses !== 1 ? 's' : ''} so far</span>
+        </div>
+      </div>
+    `;
+  }
+
+  function buildCTABanner(position) {
+    return `
+      <div class="feed-cta-banner" style="animation-delay:${position*0.07}s">
+        <div class="fcb-left">
+          <div class="fcb-title">📋 Post Your Needs Here</div>
+          <div class="fcb-sub">Tell sellers exactly what you want — make, model, budget, and features. Get real Out-The-Door prices delivered to your dashboard. 100% free. No salespeople. No surprises.</div>
+        </div>
+        <div class="fcb-actions">
+          <button class="btn btn-white btn-lg" onclick="showView('buyer-form')">🚀 Post My Request — Free</button>
+          <a href="#how-it-works" class="btn btn-ghost">Learn More ↓</a>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderFeed() {
+    const grid = document.getElementById('feedGrid');
+    if (!grid) return;
+    let html = '';
+    // 2 buyer cards, then CTA banner, then remaining cards
+    feedRequests.slice(0, 2).forEach((r, i) => html += buildFullCard(r, i));
+    html += buildCTABanner(2);
+    feedRequests.slice(2).forEach((r, i) => html += buildFullCard(r, i + 3));
+    grid.innerHTML = html;
+  }
+
+  renderFeed();
+
+  // Simulate new post every 20s
+  let newPostCount = 0;
+  setInterval(() => {
+    newPostCount++;
+    const newReq = {
+      initials: ['AM','CB','TW','LG'][newPostCount % 4],
+      name: ['Alex M.','Chris B.','Taylor W.','Laura G.'][newPostCount % 4],
+      time: 'just now',
+      title: ['Honda CR-V or RAV4','Chevy Silverado Work Truck','Hyundai Tucson or Kia Sportage','Subaru Outback AWD'][newPostCount % 4],
+      story: 'Just posted — looking for a great deal with a clear, itemized Out-The-Door price. No surprises, no add-ons.',
+      chips: ['SUV','2019–2023','Under 80k mi','Backup Camera'],
+      budget: 'Under $30,000', location: 'SoCal', timeline: 'Within 30 days',
+      responses: 0, color: ['#1B2A4A','#2563EB','#16A34A','#7C3AED'][newPostCount % 4]
+    };
+    const grid = document.getElementById('feedGrid');
+    if (grid) {
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = buildFullCard(newReq, 0);
+      const firstCard = grid.querySelector('.feed-card-full');
+      if (firstCard) grid.insertBefore(wrapper.firstElementChild, firstCard);
+      const cards = grid.querySelectorAll('.feed-card-full');
+      if (cards.length > 7) cards[cards.length - 1].remove();
+    }
+  }, 20000);
+
+  // Nav dashboard button — routes to auth if not logged in
+  async function handleDashClick() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      showView('buyer-dashboard');
+    } else {
+      showView('auth');
+    }
+  }
+
+  // Update nav button text based on auth state
+  async function updateNavAuthState() {
+    const { data: { session } } = await supabase.auth.getSession();
+    const btn = document.getElementById('navDashBtn');
+    if (btn && session) {
+      btn.textContent = 'My Dashboard';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', updateNavAuthState);
+
+</script>
