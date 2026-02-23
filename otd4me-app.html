@@ -143,7 +143,7 @@
   .btn-lg { padding: 14px 28px; font-size: 18px; }
 
   /* ── VIEWS ── */
-  .view { display: none; padding-top: 0; }
+  .view { display: none; }
   .view.active { display: block; }
 
   /* ── HERO ── */
@@ -334,7 +334,7 @@
   .app-container {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 80px 24px 24px;
+    padding: 24px;
   }
 
   .page-header {
@@ -2519,11 +2519,11 @@
     <!-- SELLER STATS BAR -->
     <div class="seller-stats-bar">
       <div class="seller-stat-box">
-        <div class="ssb-val" id="stat-inventory">5</div>
+        <div class="ssb-val" id="stat-inventory">—</div>
         <div class="ssb-label">Vehicles Listed</div>
       </div>
       <div class="seller-stat-box highlight">
-        <div class="ssb-val" id="stat-matches">23</div>
+        <div class="ssb-val" id="stat-matches">—</div>
         <div class="ssb-label">Active Buyer Matches</div>
       </div>
       <div class="seller-stat-box">
@@ -2531,7 +2531,164 @@
         <div class="ssb-label">Responses Sent</div>
       </div>
       <div class="seller-stat-box">
-        <div class="ssb-val" id="stat-messages">2</div>
+        <div class="ssb-val" id="stat-messages">—</div>
+        <div class="ssb-label">Active Conversations</div>
+      </div>
+    </div>
+
+    <div class="tabs" id="sellerTabs">
+      <div class="tab active" onclick="showSellerTab('buyer-requests')">Buyer Requests <span class="notif-badge">8</span></div>
+      <div class="tab" onclick="showSellerTab('inventory')">My Inventory <span class="notif-badge" style="background:var(--blue)">5</span></div>
+      <div class="tab" onclick="showSellerTab('messages')">Messages <span class="notif-badge">2</span></div>
+    </div>
+
+    <!-- TAB: BUYER REQUESTS -->
+    <div id="tab-buyer-requests" class="seller-tab-content">
+      <div style="font-size:17px;color:var(--gray-600);margin-bottom:16px;">Buyers who match your listed vehicles will contact you directly. Keep your inventory accurate and up to date to attract the right buyers.</div>
+
+      </div>
+
+      <!-- TAB: MY INVENTORY -->
+      <div id="tab-inventory" class="seller-tab-content">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div style="font-size:17px;color:var(--gray-600);" id="inventorySubtitle">Your listed vehicles and their buyer matches</div>
+          <button class="btn btn-primary btn-sm" onclick="goToAddVehicle()">+ Add Vehicle</button>
+        </div>
+        <div id="sellerInventoryList">
+          <div style="text-align:center;padding:48px 24px;color:var(--gray-400);">
+            <div style="font-size:32px;margin-bottom:12px;">🚗</div>
+            <div style="font-size:17px;margin-bottom:8px;">No vehicles listed yet</div>
+            <div style="font-size:15px;margin-bottom:20px;">Add your first vehicle to start receiving matched buyer leads.</div>
+            <button class="btn btn-primary">+ Add Your First Vehicle</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: BUYER LEADS (buyers who connected) -->
+      <div id="tab-leads" class="seller-tab-content" style="display:none;">
+        <div style="font-size:17px;color:var(--gray-600);margin-bottom:16px;">
+          Buyers who have connected with you. They initiated contact — respond promptly for best results.
+        </div>
+        <div id="sellerLeadsList">
+          <div style="text-align:center;padding:48px 24px;color:var(--gray-400);">
+            <div style="font-size:32px;margin-bottom:12px;">📬</div>
+            <div style="font-size:17px;margin-bottom:8px;">No leads yet</div>
+            <div style="font-size:15px;">When a buyer connects with you, they'll appear here. Make sure your inventory is up to date so buyers can find you.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: MESSAGES -->
+      <div id="tab-messages" class="seller-tab-content" style="display:none;">
+        <div style="font-size:17px;color:var(--gray-600);margin-bottom:16px;">Active conversations with buyers</div>
+        <div id="sellerMessagesList">
+          <div style="text-align:center;padding:48px 24px;color:var(--gray-400);">
+            <div style="font-size:32px;margin-bottom:12px;">💬</div>
+            <div style="font-size:17px;">No messages yet</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end udPanel-seller -->
+
+<!-- VIEW: MESSAGING                      -->
+<!-- ════════════════════════════════════ -->
+<div id="view-messaging" class="view">
+  <div class="app-container">
+    <div class="page-header">
+      <div class="page-title">Messages</div>
+      <button class="btn btn-outline btn-sm" onclick="showView('buyer-dashboard')">← My Dashboard</button>
+    </div>
+
+    <div class="messaging-layout">
+      <div class="msg-sidebar">
+        <div class="msg-sidebar-header">Conversations</div>
+        <div class="msg-thread active">
+          <span class="msg-thread-time">2h ago</span>
+          <div class="msg-thread-name">SoCal Auto Center ✓</div>
+          <div class="msg-thread-preview">Can you hold the price until Friday?</div>
+        </div>
+        <div class="msg-thread">
+          <span class="msg-thread-time">1d ago</span>
+          <div class="msg-thread-name">Mike R. (Private)</div>
+          <div class="msg-thread-preview">Yes the vehicle is still available</div>
+        </div>
+      </div>
+
+      <div class="msg-main">
+        <div class="msg-header">
+          <div>
+            <div class="msg-header-title">SoCal Auto Center <span class="verified-badge">✓ Verified</span></div>
+            <div class="msg-header-sub">Temecula, CA · Responding within 1 hour</div>
+          </div>
+          <button class="btn btn-outline btn-sm">View Full Offer</button>
+        </div>
+
+        <div class="msg-vehicle-ref">
+          <div class="mvr-label">📋 Agreed Terms on File</div>
+          <div class="mvr-details">2021 Honda Accord EX · OTD: <strong class="text-green">$19,450</strong> · Valid 7 days</div>
+        </div>
+
+        <div class="msg-body">
+          <div class="msg-bubble incoming">
+            Hi! Thanks for connecting on the 2021 Accord. I'd love to answer any questions you have. We can schedule a test drive at your convenience — we're open 7 days a week.
+            <div class="msg-time">Yesterday 2:14 PM</div>
+          </div>
+          <div class="msg-bubble outgoing">
+            Thanks! The vehicle looks great. Is the $19,450 OTD price firm or is there any flexibility?
+            <div class="msg-time">Yesterday 3:02 PM</div>
+          </div>
+          <div class="msg-bubble incoming">
+            The price is very competitive for this mileage and condition, but I can talk to my manager about including a free oil change and detail. Can you come in this weekend?
+            <div class="msg-time">Yesterday 3:45 PM</div>
+          </div>
+          <div class="msg-bubble outgoing">
+            That works! Can you hold the price until Friday so I can arrange time off?
+            <div class="msg-time">2 hours ago</div>
+          </div>
+        </div>
+
+        <div class="msg-input-area">
+          <input type="text" placeholder="Type your message... (your contact info is visible to this seller)">
+          <button class="btn btn-primary">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- VIEW: SELLER DASHBOARD               -->
+<!-- ════════════════════════════════════ -->
+<div id="view-seller-dashboard" class="view">
+  <div class="app-container">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Seller Dashboard</div>
+        <div style="font-size:17px;color:var(--gray-400);margin-top:4px;">Welcome back, SoCal Auto Center <span class="verified-badge">✓ Verified Dealer</span></div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-outline btn-sm" onclick="showView('landing')">← Live Feed</button>
+        <button class="btn btn-primary btn-sm" onclick="showUDTab('seller'); setTimeout(showAddVehicle, 100)">+ Add Vehicle</button>
+      </div>
+    </div>
+
+    <!-- SELLER STATS BAR -->
+    <div class="seller-stats-bar">
+      <div class="seller-stat-box">
+        <div class="ssb-val" id="stat-inventory">—</div>
+        <div class="ssb-label">Vehicles Listed</div>
+      </div>
+      <div class="seller-stat-box highlight">
+        <div class="ssb-val" id="stat-matches">—</div>
+        <div class="ssb-label">Active Buyer Matches</div>
+      </div>
+      <div class="seller-stat-box">
+        <div class="ssb-val" id="stat-responses">3</div>
+        <div class="ssb-label">Responses Sent</div>
+      </div>
+      <div class="seller-stat-box">
+        <div class="ssb-val" id="stat-messages">—</div>
         <div class="ssb-label">Active Conversations</div>
       </div>
     </div>
@@ -2771,7 +2928,7 @@
     <div class="page-header">
       <div>
         <div class="page-title">Submit Your Response</div>
-        <div style="font-size:17px;color:var(--gray-400);margin-top:4px;">Responding to: Toyota Camry · Budget $20,000 OTD</div>
+        <div style="font-size:17px;color:var(--gray-400);margin-top:4px;">Responding to buyer request</div>
       </div>
       <button class="btn btn-outline btn-sm" onclick="showView('seller-dashboard')">← Back</button>
     </div>
@@ -3146,18 +3303,16 @@
 </div>
 
 <div id="view-dealer-signup" class="view">
-  <div style="background:var(--navy);padding:16px 24px;display:flex;justify-content:space-between;align-items:center;margin-bottom:0;">
-    <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:white;">otd4me</div>
-    <button class="btn btn-outline btn-sm" style="color:white;border-color:rgba(255,255,255,0.4);" onclick="showView('buyer-dashboard'); showUDTab('seller')">← Back to Dashboard</button>
-  </div>
-  <div class="app-container">
-    <div class="page-header" style="margin-top:16px;">
+  <div class="app-container" style="padding-top:40px;">
+    <div class="page-header">
       <div>
         <div class="page-title">Seller Sign Up</div>
-        <div style="font-size:15px;color:var(--gray-400);margin-top:2px;">List your inventory free and connect with motivated buyers</div>
+        <div style="font-size:15px;color:var(--gray-400);margin-top:4px;">List your inventory free · Buyers come to you</div>
       </div>
+      <button class="btn btn-outline btn-sm" onclick="showView('buyer-dashboard'); showUDTab('seller')">← Back to Dashboard</button>
     </div>
-    <div class="form-card" style="max-width:580px">
+
+    <div class="form-card" style="max-width:580px;margin:0 auto;">
       <div class="dealer-signup-header">
         <h2>Create Your Seller Account</h2>
         <p>Free to join · Free to list · Buyers come to you</p>
@@ -3172,53 +3327,36 @@
       </div>
 
       <div class="form-section">
-        <div class="form-section-title">🏢 Dealership Details</div>
+        <div class="form-section-title">🏢 Business Details</div>
         <div class="form-row">
           <div class="form-group">
-            <label>Dealership Name</label>
-            <input type="text" placeholder="Your dealership name">
+            <label>Dealership / Business Name</label>
+            <input type="text" id="dsName" placeholder="Your dealership name">
           </div>
           <div class="form-group">
             <label>CA Dealer License #</label>
-            <input type="text" placeholder="e.g. DA12345">
+            <input type="text" id="dsLicense" placeholder="e.g. DA12345">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label>City</label>
-            <input type="text" placeholder="City, CA">
+            <input type="text" id="dsCity" placeholder="City, CA">
           </div>
           <div class="form-group">
             <label>Phone</label>
-            <input type="tel" id="bPhone" placeholder="(555) 000-0000" autocomplete="tel">
-          </div>
-        </div>
-        <div class="form-row single">
-          <div class="form-group">
-            <label>Email</label>
-            <input type="email" placeholder="dealer@yourlot.com">
+            <input type="tel" id="dsPhone" placeholder="(555) 000-0000" autocomplete="tel">
           </div>
         </div>
       </div>
 
       <div class="form-section">
-        <div class="form-section-title">🏷 Verification Assets</div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Dealership Logo</label>
-            <div class="upload-zone"><span class="upload-icon">🖼</span>Upload Logo (PNG/JPG)</div>
-          </div>
-          <div class="form-group">
-            <label>Dealer License Photo / PDF</label>
-            <div class="upload-zone"><span class="upload-icon">📄</span>Upload License Doc</div>
-          </div>
-        </div>
-        <div class="alert alert-blue mt-4">🔍 We manually verify all dealer licenses before awarding the Verified Dealer badge. Usually within 1 business day.</div>
+        <div class="alert alert-blue">🔍 We manually verify all dealer licenses before awarding the Verified Dealer badge. Usually within 1 business day.</div>
       </div>
 
       <div class="form-footer">
         <div class="form-note">Free to join · Free to list · Free to respond</div>
-        <button class="btn btn-primary btn-lg" onclick="showView('buyer-dashboard'); showUDTab('seller')">Create Seller Account →</button>
+        <button class="btn btn-primary btn-lg" onclick="submitDealerSignup()" style="width:100%;">Submit Application →</button>
       </div>
     </div>
   </div>
@@ -3368,17 +3506,19 @@
   async function signUpWithEmail() {
     clearAuthErrors();
     const name     = document.getElementById('signupName').value.trim();
+    const phone    = document.getElementById('signupPhone').value.trim();
     const email    = document.getElementById('signupEmail').value.trim();
     const password = document.getElementById('signupPassword').value;
 
-    if (!name)            { showAuthError('authErrorSignup', 'Please enter your first name.'); return; }
-    if (!email)           { showAuthError('authErrorSignup', 'Please enter your email address.'); return; }
+    if (!name)               { showAuthError('authErrorSignup', 'Please enter your full name.'); return; }
+    if (!phone)              { showAuthError('authErrorSignup', 'Please enter your phone number.'); return; }
+    if (!email)              { showAuthError('authErrorSignup', 'Please enter your email address.'); return; }
     if (password.length < 8) { showAuthError('authErrorSignup', 'Password must be at least 8 characters.'); return; }
 
     setAuthLoading('signupBtn', true);
     const { data, error } = await db.auth.signUp({
       email, password,
-      options: { data: { full_name: name } }
+      options: { data: { full_name: name, phone } }
     });
     setAuthLoading('signupBtn', false);
 
@@ -3450,21 +3590,9 @@
   // SHARED INVENTORY + BUYER DATA STORE
   // ════════════════════════════════════
 
-  const inventory = [
-    { year:2021, make:'Honda',   model:'Accord',     body:'Sedan', miles:38200, otd:19450, trim:'EX',     accident:false },
-    { year:2022, make:'Honda',   model:'Pilot',      body:'SUV',   miles:42100, otd:34200, trim:'EX-L',   accident:false },
-    { year:2020, make:'Toyota',  model:'Camry',      body:'Sedan', miles:55000, otd:18900, trim:'LE',     accident:false },
-    { year:2021, make:'Toyota',  model:'Highlander', body:'SUV',   miles:31000, otd:38500, trim:'XLE',    accident:false },
-    { year:2022, make:'BMW',     model:'3 Series',   body:'Sedan', miles:28000, otd:44800, trim:'330i',   accident:false }
-  ];
+  const inventory = [];
 
-  const buyerRequests = [
-    { makes:['Honda'],   models:['Accord'],     body:'Sedan', yearMin:2017, yearMax:2023, maxMiles:75000,  maxOTD:20000 },
-    { makes:['Honda'],   models:['Pilot'],      body:'SUV',   yearMin:2019, yearMax:2024, maxMiles:60000,  maxOTD:35000 },
-    { makes:['Toyota'],  models:['Highlander'], body:'SUV',   yearMin:2018, yearMax:2024, maxMiles:80000,  maxOTD:45000 },
-    { makes:['BMW'],     models:['3 Series'],   body:'Sedan', yearMin:2020, yearMax:2023, maxMiles:50000,  maxOTD:50000 },
-    { makes:['Mazda'],   models:['CX-5'],       body:'SUV',   yearMin:2020, yearMax:2024, maxMiles:40000,  maxOTD:28000 }
-  ];
+  const buyerRequests = [];
 
   function vehicleMatchesBuyer(v, b) {
     const makeOK = !b.makes || b.makes.length === 0 || b.makes.includes(v.make);
@@ -4235,8 +4363,25 @@
       var el = document.getElementById('tab-' + t);
       if (el) el.style.display = t === 'inventory' ? 'block' : 'none';
     });
-    // Now call showAddVehicle
-    setTimeout(showAddVehicle, 50);
+    // Scroll to inventory list then open form
+    setTimeout(function() {
+      showAddVehicle();
+      var list = document.getElementById('sellerInventoryList');
+      if (list) list.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+  }
+
+
+  function submitDealerSignup() {
+    const name    = document.getElementById('dsName').value.trim();
+    const license = document.getElementById('dsLicense').value.trim();
+    const city    = document.getElementById('dsCity').value.trim();
+    const phone   = document.getElementById('dsPhone').value.trim();
+    if (!name)  { alert('Please enter your dealership name.'); return; }
+    if (!phone) { alert('Please enter a phone number.'); return; }
+    alert('Application submitted! We will review your dealer license and follow up within 1 business day.');
+    showView('buyer-dashboard');
+    showUDTab('seller');
   }
 
   function goToDealerSignup() {
@@ -4251,7 +4396,9 @@
     if (target) {
       target.style.display = 'block';
       target.classList.add('active');
-      window.scrollTo(0, 0);
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     } else {
       alert('Dealer signup form not found. Please refresh the page.');
     }
@@ -4440,45 +4587,7 @@
   }
 
   // ── LIVE FEED DATA ──
-  const feedRequests = [
-    {
-      initials: 'JM', name: 'Jason M.', time: '3 min ago',
-      make: 'Toyota / Honda', model: 'Camry or Accord',
-      title: 'Toyota Camry',
-      story: 'Daily commuter, about 40 miles each way. Need something reliable and fuel-efficient.',
-      yearRange: '2018–2023', mileage: '70,000',
-      budget: 'Under $20,000', location: 'Temecula, CA', timeline: 'ASAP', responses: 4, color: '#1B2A4A', matchCount: 0
-    },
-    {
-      initials: 'SR', name: 'Sandra R.', time: '11 min ago',
-      make: 'Honda / Toyota', model: 'Pilot or Highlander',
-      title: 'Honda Pilot',
-      story: 'Need room for 3 kids and a dog.',
-      yearRange: '2019–2024', mileage: '60,000',
-      budget: 'Under $35,000', location: 'Murrieta, CA', timeline: 'Within 30 days', responses: 7, color: '#2563EB'
-    },
-    {
-      initials: 'DT', name: 'David T.', time: '28 min ago',
-      title: 'Ford F-150 — Work Truck Needed',
-      story: 'Need a solid work truck for a small landscaping business. Towing capacity matters. Open to crew cab or extended.',
-      chips: ['Truck', 'F-150', '2018–2022', 'AWD/4WD', 'Towing Pkg'],
-      budget: 'Under $38,000', location: 'Escondido, CA', timeline: 'Within 30 days', responses: 5, color: '#16A34A'
-    },
-    {
-      initials: 'KL', name: 'Karen L.', time: '45 min ago',
-      title: 'Mazda CX-5',
-      story: 'First vehicle purchase — a little nervous about the process! Love the CX-5 but open to comparables. Fuel economy and safety are my top priorities.',
-      chips: ['Compact SUV', '2020–2024', 'Under 40k mi', 'Lane Assist'],
-      budget: 'Under $28,000', location: 'San Diego, CA', timeline: 'Within 30 days', responses: 3, color: '#7C3AED'
-    },
-    {
-      initials: 'RP', name: 'Robert P.', make: 'BMW / Mercedes', model: '3 Series or C-Class', yearRange: '2020–2023', mileage: '50,000', time: '1 hr ago',
-      title: 'BMW 3 Series',
-      story: 'Upgrading from a Camry. Looking for a premium feel, tech-forward interior. Prefer certified pre-owned with a remaining warranty.',
-      chips: ['Luxury Sedan', 'CPO Preferred', '2020–2023', 'Leather', 'Navigation'],
-      budget: 'Under $50,000', location: 'Carlsbad, CA', timeline: 'ASAP', responses: 6, color: '#D97706'
-    }
-  ];
+  const feedRequests = [];
 
   function buildFullCard(req, idx) {
     return `
@@ -5047,7 +5156,7 @@
       initials: ['AM','CB','TW','LG'][newPostCount % 4],
       name: ['Alex M.','Chris B.','Taylor W.','Laura G.'][newPostCount % 4],
       time: 'just now',
-      title: ['Honda CR-V','Chevy Silverado Work Truck','Hyundai Tucson','Subaru Outback AWD'][newPostCount % 4],
+      title: 'New vehicle request',
       story: 'Just posted — looking for a great deal with a clear, itemized Out-The-Door price. No surprises, no add-ons.',
       chips: ['SUV','2019–2023','Under 80k mi','Backup Camera'],
       budget: 'Under $30,000', location: 'SoCal', timeline: 'Within 30 days',
